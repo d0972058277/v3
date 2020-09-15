@@ -4,12 +4,12 @@ namespace V3Lib.Models
 {
     public abstract class Additional : IAdditional
     {
-        protected Component _targetComponent;
+        protected Component _relationComponent;
 
         public virtual string TypeName => this.GetType().Name;
 
-        public virtual void SetTargetComponent(Component component) => _targetComponent = component;
+        public virtual void SetRelationComponent(Component component) => _relationComponent = component;
 
-        public virtual Component GetTargetComponent() => _targetComponent;
+        public virtual Component GetRelationComponent() => _relationComponent;
     }
 }
