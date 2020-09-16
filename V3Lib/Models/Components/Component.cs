@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MessagePack;
 using Newtonsoft.Json;
 using V3Lib.Filters.Abstractions;
 using V3Lib.Models.Conditions;
@@ -9,6 +10,9 @@ using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Models.Components
 {
+    [Union(0, typeof(MemberComponent))]
+    [Union(1, typeof(LazyComponent))]
+    [MessagePackObject(true)]
     [AddJsonTypeName]
     public abstract class Component : IElement
     {

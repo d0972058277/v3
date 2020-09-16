@@ -1,5 +1,8 @@
+using MessagePack;
+
 namespace V3Lib.Models.Conditions
 {
+    [MessagePackObject(true)]
     public struct Location : IConditionField
     {
         public string City { get; set; }

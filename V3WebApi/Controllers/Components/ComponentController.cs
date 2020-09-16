@@ -26,7 +26,7 @@ namespace V3WebApi.Controllers.Components
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPost("Fake")]
-        public async Task<ActionResult> FakeComponent()
+        public async Task<ActionResult> Fake()
         {
             var refCondit = new ReferenceCondition { Ref = "Ref" };
             var definedCondit = new DefinedCondition();
@@ -57,9 +57,17 @@ namespace V3WebApi.Controllers.Components
             component.SubComponents.Add(sub1);
             component.SubComponents.Add(sub2);
 
-            await _distributedCache.SetObjectAsync(DistributedCacheKeys.Components, component);
+            await _distributedCache.SetObjectAsync(DistributedCacheKeys.Components, (Component) component);
 
             return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet]
+        public async Task<ActionResult<Component>> Gets()
+        {
+            var result = await _distributedCache.GetObjectAsync<Component>(DistributedCacheKeys.Components);
+            return Ok(result);
         }
     }
 }

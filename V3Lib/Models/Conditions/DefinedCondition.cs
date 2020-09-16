@@ -1,25 +1,29 @@
 using System;
 using System.Collections.Generic;
+using MessagePack;
 using V3Lib.Filters.Abstractions;
+using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Conditions
 {
+    [MessagePackObject(true)]
+    [AddJsonTypeName]
     public class DefinedCondition : Condition
     {
         /// <summary>
         /// 是否隱藏
         /// </summary>
-        public Hide Hide { get; set; }
+        public Hide? Hide { get; set; } = null;
 
         /// <summary>
         /// 開始時間條件
         /// </summary>
-        public StartDateTime Start { get; set; }
+        public StartDateTime? Start { get; set; }
 
         /// <summary>
         /// 結束時間條件
         /// </summary>
-        public EndDateTime End { get; set; }
+        public EndDateTime? End { get; set; }
 
         /// <summary>
         /// 社區Id
