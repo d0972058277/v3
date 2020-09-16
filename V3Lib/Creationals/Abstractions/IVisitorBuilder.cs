@@ -5,7 +5,9 @@ using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Creationals.Abstractions
 {
-    public interface IVisitorBuilder<T, P> : IBuilder<T> where T : IVisitor where P : IParams
+    public interface IVisitorBuilder : IBuilder { }
+
+    public interface IVisitorBuilder<T, P> : IVisitorBuilder, IBuilder<T> where T : IVisitor where P : IParams
     {
         Type ProductType { get; }
         P Params { get; }
@@ -20,9 +22,11 @@ namespace V3Lib.Creationals.Abstractions
         }
 
         public Type ProductType => typeof(T);
+
         public virtual P Params { get; protected set; }
 
         public virtual T Build() => (T) Activator.CreateInstance(ProductType, Params);
+
         public virtual IVisitorBuilder<T, P> SetParams(P @params)
         {
             Params = @params;
