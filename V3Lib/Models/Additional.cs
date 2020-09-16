@@ -4,7 +4,7 @@ using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models
 {
-    public abstract class Additional : IAdditional
+    public abstract class Additional<T> : IAdditional<T>
     {
         protected Component _relationComponent;
 
@@ -14,7 +14,7 @@ namespace V3Lib.Models
 
         public virtual Component GetRelationComponent() => _relationComponent;
 
-        public T Clone<T>() where T : IAdditional
+        public T Clone()
         {
             var json = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {

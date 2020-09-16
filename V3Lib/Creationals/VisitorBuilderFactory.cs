@@ -47,7 +47,9 @@ namespace V3Lib.Creationals
             _visitorBuilders = visitorBuilders;
         }
 
-        public T Get<T>()
+        public T Get<T>() where T : IVisitorBuilder => (this as ISimpleFactory).Get<T>();
+
+        T ISimpleFactory.Get<T>()
         {
             var result = _visitorBuilders[typeof(T)];
             return (T) result;

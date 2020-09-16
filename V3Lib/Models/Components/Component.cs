@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using V3Lib.Filters.Abstractions;
 using V3Lib.Models.Conditions;
@@ -15,9 +16,7 @@ namespace V3Lib.Models.Components
 
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public virtual Condition Condition { get; set; }
-
-        public virtual Style Style { get; set; }
+        public Condition Condition { get; set; }
 
         public void SetUpperLayerComponent(Component component) => _upperLayerComponent = component;
 
@@ -38,6 +37,15 @@ namespace V3Lib.Models.Components
             return _upperLayerComponent.GetRoot();
         }
 
+        public virtual void ExchangeRef2DefinedCondition(Dictionary<string, DefinedCondition> definedConditions)
+        {
+            if (Condition is ReferenceCondition)
+            {
+                var condit = (ReferenceCondition) Condition;
+                Condition = definedConditions[condit.Ref].Clone();
+            }
+        }
+
         public abstract bool Isolated();
 
         public abstract void LinkRelation2Extensions();
@@ -49,6 +57,5 @@ namespace V3Lib.Models.Components
         public abstract void ClearLowerLayer();
 
         public abstract void RemoveLowerLayer(Component component);
-
     }
 }

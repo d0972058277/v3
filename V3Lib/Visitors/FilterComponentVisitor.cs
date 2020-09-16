@@ -9,9 +9,7 @@ namespace V3Lib.Visitors
     {
         public FilterComponentVisitor(IFilter filter) : base(filter) { }
 
-        protected new IFilter Params { get; }
-
-        public IFilter Filter { get => Params; }
+        public IFilter Filter => (IFilter) _params;
 
         public override void Visit(Component element)
         {

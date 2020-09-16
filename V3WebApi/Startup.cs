@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MessagePack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using V3Lib.Creationals;
+using V3Lib.NewtonsoftJsonExtensions;
 using V3WebApi.SwashbuckleExtensions;
 
 namespace V3WebApi
@@ -35,7 +30,10 @@ namespace V3WebApi
                     c.OutputFormatters.Add(new MessagePackOutputFormatter(MessagePack.Resolvers.ContractlessStandardResolver.Options));
                     c.InputFormatters.Add(new MessagePackInputFormatter(MessagePack.Resolvers.ContractlessStandardResolver.Options));
                 })
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(c =>
+                {
+                    c.SerializerSettings.ContractResolver = new JsonTypeNameContractResolver();
+                });
 
             services.AddApiVersioning(c =>
             {
@@ -51,6 +49,13 @@ namespace V3WebApi
                 c.OperationFilter<RemoveVersionParameterFilter>();
                 c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 c.EnableAnnotations();
+            });
+
+            // 分散式快取
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Environment.GetEnvironmentVariable("RedisConnectionString");
+                options.InstanceName = "FeatureComponent";
             });
 
             services.AddVisitorBuilderFactory();

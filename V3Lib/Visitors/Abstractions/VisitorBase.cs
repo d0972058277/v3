@@ -6,10 +6,10 @@ namespace V3Lib.Visitors.Abstractions
     {
         protected VisitorBase(IParams @params)
         {
-            Params = @params;
+            _params = @params;
         }
 
-        protected virtual IParams Params { get; }
+        protected virtual IParams _params { get; }
         public abstract void Visit(T element);
         public virtual void Visit(IElement element) => this.Visit((T) element);
     }

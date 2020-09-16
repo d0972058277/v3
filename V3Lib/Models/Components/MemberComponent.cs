@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using V3Lib.Models.Conditions;
 using V3Lib.Models.Extensions;
 using V3Lib.Models.Medias;
 using V3Lib.Models.Operations;
@@ -20,6 +21,8 @@ namespace V3Lib.Models.Components
 
         public string Description { get; set; }
 
+        public Style Style { get; set; }
+
         public Extension Extension { get; set; }
 
         public Reaction Reaction { get; set; }
@@ -28,7 +31,7 @@ namespace V3Lib.Models.Components
 
         public List<Operation> Operations { get; set; } = new List<Operation>();
 
-        public List<Component> SubComponents { get; set; } = new List<Component>();
+        public virtual List<Component> SubComponents { get; set; } = new List<Component>();
 
         public override void Accept(IVisitor visitor)
         {
