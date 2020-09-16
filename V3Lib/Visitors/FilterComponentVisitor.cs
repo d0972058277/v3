@@ -7,12 +7,11 @@ namespace V3Lib.Visitors
 {
     public class FilterComponentVisitor : VisitorBase<Component>, IFilterVisitor<Component>
     {
-        public FilterComponentVisitor(IFilter filter)
-        {
-            Filter = filter;
-        }
+        public FilterComponentVisitor(IFilter filter) : base(filter) { }
 
-        public IFilter Filter { get; }
+        protected new IFilter Params { get; }
+
+        public IFilter Filter { get => Params; }
 
         public override void Visit(Component element)
         {

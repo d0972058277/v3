@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using V3Lib.Filters.Abstractions;
 
 namespace V3Lib.Models.Conditions

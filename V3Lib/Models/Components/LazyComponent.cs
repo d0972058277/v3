@@ -1,4 +1,5 @@
 using System.Net.Http;
+using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Components

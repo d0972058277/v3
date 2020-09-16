@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using V3Lib.Models.Components;
+using V3Lib.Models.Params;
 using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3Lib.Visitors;
@@ -33,7 +34,7 @@ namespace V3Test.Components
             var memberComponent = new MemberComponent();
             upperComponent.AddLowerLayer(memberComponent);
 
-            var visitor = new FlatComponentVisitor();
+            var visitor = new FlatComponentVisitor(new NullParams());
             upperComponent.Accept(visitor);
 
             Assert.Equal(2, visitor.FlatElement.Count);

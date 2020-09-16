@@ -3,7 +3,7 @@ using V3Lib.Models;
 
 namespace V3Lib.Filters
 {
-    public class NoFilter : IFilter
+    public class NullFilter : IFilter
     {
         public bool Verify(IConditionField conditionField) => false;
     }

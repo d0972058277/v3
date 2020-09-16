@@ -20,8 +20,6 @@ namespace V3Lib.Models.Components
 
         public string Description { get; set; }
 
-        public Style Style { get; set; }
-
         public Extension Extension { get; set; }
 
         public Reaction Reaction { get; set; }

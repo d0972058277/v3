@@ -3,7 +3,7 @@ using V3Lib.Models.Conditions;
 
 namespace V3Lib.Filters.Abstractions
 {
-    public interface IFilter
+    public interface IFilter : IParams
     {
         bool Verify(IConditionField conditionField);
     }

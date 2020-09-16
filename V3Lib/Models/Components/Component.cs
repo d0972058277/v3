@@ -2,6 +2,7 @@ using System;
 using Newtonsoft.Json;
 using V3Lib.Filters.Abstractions;
 using V3Lib.Models.Conditions;
+using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3Lib.Visitors.Abstractions;
 
@@ -15,6 +16,8 @@ namespace V3Lib.Models.Components
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public virtual Condition Condition { get; set; }
+
+        public virtual Style Style { get; set; }
 
         public void SetUpperLayerComponent(Component component) => _upperLayerComponent = component;
 
