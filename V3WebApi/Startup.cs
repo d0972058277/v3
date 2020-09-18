@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using Newtonsoft.Json;
 using V3Lib.Creationals;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3WebApi.SwashbuckleExtensions;
@@ -33,6 +37,8 @@ namespace V3WebApi
                 .AddNewtonsoftJson(c =>
                 {
                     c.SerializerSettings.ContractResolver = new JsonTypeNameContractResolver();
+                    c.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                    c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
 
             services.AddApiVersioning(c =>
@@ -50,6 +56,7 @@ namespace V3WebApi
                 c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 c.EnableAnnotations();
             });
+            services.AddSwaggerGenNewtonsoftSupport();
 
             // 分散式快取
             services.AddStackExchangeRedisCache(options =>
@@ -58,7 +65,31 @@ namespace V3WebApi
                 options.InstanceName = "FeatureComponent";
             });
 
-            services.AddVisitorBuilderFactory();
+            // 設定MongoDb的DateTime格式為Local
+            BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeKind.Local));
+            // MongoDb
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var url = new MongoUrl(Environment.GetEnvironmentVariable("MongoConnectionString"));
+                var clientSettings = MongoClientSettings.FromUrl(url);
+
+                // clientSettings.SslSettings = new SslSettings
+                // {
+                //     CheckCertificateRevocation = false
+                // };
+
+                // 舊
+                //clientSettings.UseSsl = true;
+                //clientSettings.VerifySslCertificate = false;
+
+                // 新
+                // clientSettings.UseTls = true;
+                // clientSettings.AllowInsecureTls = false;
+
+                return new MongoClient(clientSettings);
+            });
+
+            services.AddVisitorFactory();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +103,8 @@ namespace V3WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,4 +1,4 @@
-namespace V3Lib.Models
+namespace V3Lib
 {
     public interface IConditionField { }
 }

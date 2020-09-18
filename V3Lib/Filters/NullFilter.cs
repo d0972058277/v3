@@ -5,6 +5,6 @@ namespace V3Lib.Filters
 {
     public class NullFilter : IFilter
     {
-        public bool Verify(IConditionField conditionField) => false;
+        public bool Filter(IConditionField conditionField) => true;
     }
 }

@@ -1,12 +1,11 @@
 using System;
-using V3Lib.Filters.Abstractions;
 using V3Lib.Visitors.Abstractions;
 
-namespace V3Lib.Models
+namespace V3Lib
 {
     public interface IElement
     {
-        Guid Id { get; }
+        Guid ComponentId { get; }
         void Accept(IVisitor visitor);
     }
 }

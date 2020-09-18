@@ -14,16 +14,16 @@ namespace V3Lib.Filters
 
         public IFilter InnerFilter { get; }
 
-        public bool Verify(IConditionField conditionField)
+        public bool Filter(IConditionField conditionField)
         {
-            if (conditionField is EndDateTime)
+            if (conditionField is EndDateTimeCondit)
             {
-                var condition = (EndDateTime) conditionField;
-                if (condition.DateTime < DateTime.UtcNow.AddHours(8))
-                    return true;
+                var condition = (EndDateTimeCondit) conditionField;
+                if (condition.DateTime < DateTime.Now)
+                    return false;
             }
 
-            return InnerFilter.Verify(conditionField);
+            return InnerFilter.Filter(conditionField);
         }
     }
 }

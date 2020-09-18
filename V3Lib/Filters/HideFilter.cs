@@ -13,14 +13,14 @@ namespace V3Lib.Filters
 
         public IFilter InnerFilter { get; }
 
-        public bool Verify(IConditionField conditionField)
+        public bool Filter(IConditionField conditionField)
         {
             if (conditionField is Hide)
             {
-                return true;
+                return false;
             }
 
-            return InnerFilter.Verify(conditionField);
+            return InnerFilter.Filter(conditionField);
         }
     }
 }

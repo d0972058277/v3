@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using V3Lib.Creationals.Abstractions;
 using V3Lib.Models;
 using V3Lib.Models.Components;
 using V3Lib.Models.Params;
@@ -15,7 +16,9 @@ namespace V3Lib.Visitors
 
         public override void Visit(Component element)
         {
-            FlatElement.Add(element.Id, element);
+            FlatElement.Add(element.ComponentId, element);
         }
     }
+
+    public class FlatComponentVisitorBuilder : VisitorBuilder<FlatComponentVisitor, NullParams> { }
 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MessagePack;
+using Newtonsoft.Json;
+using V3Lib.Creationals.Abstractions;
 using V3Lib.Filters.Abstractions;
 using V3Lib.NewtonsoftJsonExtensions;
 
@@ -13,17 +16,17 @@ namespace V3Lib.Models.Conditions
         /// <summary>
         /// 是否隱藏
         /// </summary>
-        public Hide? Hide { get; set; } = null;
+        public Hide Hide { get; set; } = null;
 
         /// <summary>
         /// 開始時間條件
         /// </summary>
-        public StartDateTime? Start { get; set; }
+        public StartDateTimeCondit Start { get; set; }
 
         /// <summary>
         /// 結束時間條件
         /// </summary>
-        public EndDateTime? End { get; set; }
+        public EndDateTimeCondit End { get; set; }
 
         /// <summary>
         /// 社區Id
@@ -35,9 +38,39 @@ namespace V3Lib.Models.Conditions
         /// </summary>
         public HashSet<City> Cities { get; set; } = new HashSet<City>();
 
-        public List<Location> GetLocations()
+        protected List<IConditionField> GetConditionFields()
         {
-            var locations = new List<Location>();
+            var conditionFields = new List<IConditionField>();
+
+            if (Hide != null) conditionFields.Add(Hide);
+            if (Start != null) conditionFields.Add(Start);
+            if (End != null) conditionFields.Add(End);
+
+            var communities = GetCommunities();
+            if (communities.Any()) conditionFields.Add(communities);
+
+            var locations = GetLocations();
+            if (locations.Any()) conditionFields.Add(locations);
+
+            return conditionFields;
+        }
+
+        public CommunityStructs GetCommunities()
+        {
+            var communities = new CommunityStructs();
+
+            foreach (var community in Communities)
+            {
+                communities.Add(new CommunityStruct { Id = community.Id });
+            }
+
+            return communities;
+        }
+
+        public Locations GetLocations()
+        {
+            var locations = new Locations();
+
             foreach (var city in Cities)
             {
                 var location = new Location();
@@ -59,44 +92,14 @@ namespace V3Lib.Models.Conditions
             return locations;
         }
 
-        public override void Pass(IFilter filter)
+        public override bool Pass(IFilter filter)
         {
-            if (filter.Verify(Hide))
+            foreach (var conditionField in GetConditionFields())
             {
-                _relationComponent.Isolated();
-                return;
+                if (filter.Filter(conditionField) == false)
+                    return false;
             }
-
-            if (filter.Verify(Start))
-            {
-                _relationComponent.Isolated();
-                return;
-            }
-
-            if (filter.Verify(End))
-            {
-                _relationComponent.Isolated();
-                return;
-            }
-
-            foreach (var community in Communities)
-            {
-                if (filter.Verify(community))
-                {
-                    _relationComponent.Isolated();
-                    return;
-                }
-            }
-
-            var locations = GetLocations();
-            foreach (var location in locations)
-            {
-                if (filter.Verify(location))
-                {
-                    _relationComponent.Isolated();
-                    return;
-                }
-            }
+            return true;
         }
     }
 }

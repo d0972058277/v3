@@ -19,7 +19,8 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "RedisConnectionString": "127.0.0.1:6379"
+                "RedisConnectionString": "127.0.0.1:6379",
+                "MongoConnectionString": "mongodb://localhost:27017"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
+using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Models.Components
 {
@@ -11,16 +13,6 @@ namespace V3Lib.Models.Components
 
         public string Path { get; set; }
 
-        public override void AddLowerLayer(Component component) { }
-
-        public override void ClearLowerLayer() { }
-
-        public override bool Isolated() => _upperLayerComponent is null;
-
-        public override void LinkRelation2Extensions() { }
-
-        public override void LinkRelation2LowerLayers() { }
-
-        public override void RemoveLowerLayer(Component component) { }
+        public override void Accept(IVisitor visitor) => visitor.Visit(this);
     }
 }

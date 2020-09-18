@@ -3,7 +3,7 @@ using MessagePack;
 namespace V3Lib.Models.Conditions
 {
     [MessagePackObject(true)]
-    public struct Village
+    public class Village
     {
         public string Name { get; set; }
     }

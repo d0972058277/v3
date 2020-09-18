@@ -8,7 +8,7 @@ namespace V3Lib.Models.Medias
     [Union(2, typeof(VideoMedia))]
     [MessagePackObject(true)]
     [AddJsonTypeName]
-    public abstract class Media : Additional<Media>
+    public abstract class Media
     {
         public string Title { get; set; }
         public string Path { get; set; }

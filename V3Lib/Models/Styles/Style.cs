@@ -7,5 +7,5 @@ namespace V3Lib.Models.Styles
     [Union(1, typeof(RecommendationStyle))]
     [MessagePackObject(true)]
     [AddJsonTypeName]
-    public abstract class Style : Additional<Style> { }
+    public abstract class Style { }
 }

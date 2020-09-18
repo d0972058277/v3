@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MessagePack;
-using Newtonsoft.Json;
-using V3Lib.Filters.Abstractions;
 using V3Lib.Models.Conditions;
-using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3Lib.Visitors.Abstractions;
 
@@ -18,48 +15,36 @@ namespace V3Lib.Models.Components
     {
         protected Component _upperLayerComponent;
 
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid? UpperLayerComponentId { get; set; } = null;
+
+        public Guid ComponentId { get; set; } = Guid.NewGuid();
 
         public Condition Condition { get; set; }
 
-        public void SetUpperLayerComponent(Component component) => _upperLayerComponent = component;
-
-        public virtual void Accept(IVisitor visitor) => visitor.Visit(this);
-
-        public virtual void Trim()
+        public Component GetRoot()
         {
-            _upperLayerComponent.RemoveLowerLayer(this);
-            RemoveUpperLayer();
-            ClearLowerLayer();
-        }
-
-        public virtual void RemoveUpperLayer() => _upperLayerComponent = null;
-
-        public virtual Component GetRoot()
-        {
-            if (_upperLayerComponent is null) return this;
+            if (IsRoot()) return this;
             return _upperLayerComponent.GetRoot();
         }
 
-        public virtual void ExchangeRef2DefinedCondition(Dictionary<string, DefinedCondition> definedConditions)
+        public bool IsRoot() => _upperLayerComponent is null;
+
+        public virtual void Isolate()
         {
-            if (Condition is ReferenceCondition)
-            {
-                var condit = (ReferenceCondition) Condition;
-                Condition = definedConditions[condit.Ref].Clone();
-            }
+            SetUpperLayerComponent(null);
         }
 
-        public abstract bool Isolated();
+        public void RemoveUpperLayer()
+        {
+            SetUpperLayerComponent(null);
+        }
 
-        public abstract void LinkRelation2Extensions();
+        public void SetUpperLayerComponent(Component component)
+        {
+            _upperLayerComponent = component;
+            UpperLayerComponentId = component?.ComponentId;
+        }
 
-        public abstract void LinkRelation2LowerLayers();
-
-        public abstract void AddLowerLayer(Component component);
-
-        public abstract void ClearLowerLayer();
-
-        public abstract void RemoveLowerLayer(Component component);
+        public abstract void Accept(IVisitor visitor);
     }
 }

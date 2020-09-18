@@ -8,7 +8,7 @@ namespace V3Lib.Models.Reactions
     [Union(2, typeof(ExternalBrowserReaction))]
     [MessagePackObject(true)]
     [AddJsonTypeName]
-    public abstract class Reaction : Additional<Reaction>
+    public abstract class Reaction
     {
         public string Path { get; set; }
     }

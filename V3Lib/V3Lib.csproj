@@ -8,5 +8,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8"/>
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.8"/>
     <PackageReference Include="KnstArchitecture.SequentialGuid" Version="1.0.0"/>
+    <PackageReference Include="MongoDB.Driver" Version="2.11.2"/>
   </ItemGroup>
 </Project>

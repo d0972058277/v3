@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using V3Lib.Filters.Abstractions;
 using V3Lib.Models;
 using V3Lib.Models.Conditions;
@@ -7,29 +8,26 @@ namespace V3Lib.Filters
 {
     public class CommunityFilter : IFilter, IFilterDecorator
     {
-        public CommunityFilter(IFilter innerFilter, List<Community> communities)
+        public CommunityFilter(IFilter innerFilter, List<CommunityStruct> communityStructs)
         {
             InnerFilter = innerFilter;
-            Communities = communities;
+            CommunityStructs = communityStructs;
         }
 
         public IFilter InnerFilter { get; }
 
-        public List<Community> Communities { get; }
+        public List<CommunityStruct> CommunityStructs { get; }
 
-        public bool Verify(IConditionField conditionField)
+        public bool Filter(IConditionField conditionField)
         {
-            if (conditionField is Community)
+            if (conditionField is CommunityStructs)
             {
-                var condition = (Community) conditionField;
-                foreach (var community in Communities)
-                {
-                    if (community == condition)
-                        return true;
-                }
+                var conditions = (CommunityStructs) conditionField;
+                if (!CommunityStructs.Any(community => conditions.Contains(community)))
+                    return false;
             }
 
-            return InnerFilter.Verify(conditionField);
+            return InnerFilter.Filter(conditionField);
         }
     }
 }

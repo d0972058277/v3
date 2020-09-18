@@ -5,7 +5,7 @@ namespace V3Lib.Filters.Abstractions
 {
     public interface IFilter : IParams
     {
-        bool Verify(IConditionField conditionField);
+        bool Filter(IConditionField conditionField);
     }
 
     public interface IFilterDecorator : IFilter

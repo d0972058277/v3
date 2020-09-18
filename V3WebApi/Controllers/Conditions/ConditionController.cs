@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using MongoDB.Driver;
 using V3Lib.Models;
 using V3Lib.Models.Conditions;
 
@@ -13,44 +14,62 @@ namespace V3WebApi.Controllers.Conditions
     public partial class ConditionController : ControllerBase
     {
         protected IDistributedCache _distributedCache;
+        protected IMongoClient _mongoClient;
 
-        public ConditionController(IDistributedCache distributedCache)
+        protected IMongoCollection<MongoPayloadCondition> _collection => _mongoClient.GetDatabase("Conditions").GetCollection<MongoPayloadCondition>("Defined");
+
+        public ConditionController(IDistributedCache distributedCache, IMongoClient mongoClient)
         {
             _distributedCache = distributedCache;
+            _mongoClient = mongoClient;
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpGet("Defineds")]
-        public async Task<ActionResult<Dictionary<string, DefinedCondition>>> GetDefineds()
+        [HttpGet("Defined")]
+        public async Task<ActionResult<List<MongoPayloadCondition>>> GetDefineds()
         {
-            var defineds = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>(DistributedCacheKeys.Conditions);
-            if (defineds is null) defineds = new Dictionary<string, DefinedCondition>();
-
-            return Ok(defineds);
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Empty;
+            var cursor = await _collection.FindAsync(filter);
+            var result = await cursor.ToListAsync();
+            return Ok(result);
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpGet("Defineds/{key}")]
-        public async Task<ActionResult<DefinedCondition>> GetDefined([FromRoute] string key)
+        [HttpPost("Defined")]
+        public async Task<ActionResult> PostDefined([FromBody] List<MongoPayloadCondition> postDefineds)
         {
-            var defineds = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>(DistributedCacheKeys.Conditions);
-            if (defineds is null) defineds = new Dictionary<string, DefinedCondition>();
+            await _collection.InsertManyAsync(postDefineds);
+            return Ok();
+        }
 
-            var defined = defineds[key];
+        [MapToApiVersion("3.0-patch0")]
+        [HttpDelete("Defined")]
+        public async Task<ActionResult> DeleteDefined()
+        {
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Empty;
+            await _collection.DeleteManyAsync(filter);
+            return Ok();
+        }
 
-            return Ok(defined);
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet("Defined/{key}")]
+        public async Task<ActionResult<MongoPayloadCondition>> GetDefined([FromRoute] string key)
+        {
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Eq(c => c.Key, key);
+            var cursor = await _collection.FindAsync(filter);
+            var result = await cursor.SingleAsync();
+            return Ok(result);
         }
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPost("Defined/{key}")]
         public async Task<ActionResult> PostDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
-            var defineds = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>(DistributedCacheKeys.Conditions);
-            if (defineds is null) defineds = new Dictionary<string, DefinedCondition>();
-
-            defineds.Add(key, defined);
-            await _distributedCache.SetObjectAsync(DistributedCacheKeys.Conditions, defineds);
-
+            var payload = new MongoPayloadCondition { Key = key, Defined = default };
+            await _collection.InsertOneAsync(payload);
             return Ok();
         }
 
@@ -58,12 +77,10 @@ namespace V3WebApi.Controllers.Conditions
         [HttpPut("Defined/{key}")]
         public async Task<ActionResult> PutDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
-            var defineds = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>(DistributedCacheKeys.Conditions);
-            if (defineds is null) defineds = new Dictionary<string, DefinedCondition>();
-
-            defineds[key] = defined;
-            await _distributedCache.SetObjectAsync(DistributedCacheKeys.Conditions, defineds);
-
+            var payload = new MongoPayloadCondition { Key = key, Defined = default };
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Eq(c => c.Key, key);
+            var cursor = await _collection.FindOneAndReplaceAsync(filter, payload);
             return Ok();
         }
 
@@ -71,11 +88,9 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined/{key}")]
         public async Task<ActionResult<Dictionary<string, DefinedCondition>>> DeleteDefined([FromRoute] string key)
         {
-            var defineds = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>(DistributedCacheKeys.Conditions);
-            if (defineds is null) defineds = new Dictionary<string, DefinedCondition>();
-
-            defineds.Remove(key);
-
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Eq(c => c.Key, key);
+            var cursor = await _collection.FindOneAndDeleteAsync(filter);
             return Ok();
         }
     }

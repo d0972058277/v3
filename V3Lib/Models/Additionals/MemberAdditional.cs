@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using MessagePack;
 using V3Lib.NewtonsoftJsonExtensions;
 
-namespace V3Lib.Models.Extensions
+namespace V3Lib.Models.Additionals
 {
     [MessagePackObject(true)]
     [AddJsonTypeName]
-    public class ExtensionBase : Extension
+    public class MemberAdditional : Additional
     {
         /// <summary>
         /// Google 分析
@@ -26,7 +27,7 @@ namespace V3Lib.Models.Extensions
         /// <summary>
         /// 標籤
         /// </summary>
-        public HashSet<Tag> Tags { get; set; }
+        public HashSet<Tag> Tags { get; set; } = new HashSet<Tag>();
 
         /// <summary>
         /// 廣告
@@ -34,8 +35,13 @@ namespace V3Lib.Models.Extensions
         public Ad Ad { get; set; }
 
         /// <summary>
-        /// 時間設定
+        /// 開始顯示
         /// </summary>
-        public DateTimeSetting DateTimeSetting { get; set; }
+        public StartDateTime? Start { get; set; }
+
+        /// <summary>
+        /// 結束顯示
+        /// </summary>
+        public EndDateTime? End { get; set; }
     }
 }

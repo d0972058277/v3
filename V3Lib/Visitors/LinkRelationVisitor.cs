@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using V3Lib.Creationals.Abstractions;
 using V3Lib.Models;
 using V3Lib.Models.Components;
 using V3Lib.Models.Params;
@@ -7,12 +10,22 @@ namespace V3Lib.Visitors
 {
     public class LinkRelationVisitor : VisitorBase<Component>
     {
-        public LinkRelationVisitor(NullParams @params) : base(@params) { }
+        public LinkRelationVisitor(IParams @params) : base(@params) { }
+
+        public Dictionary<Guid, Component> FlatElements { get; } = new Dictionary<Guid, Component>();
 
         public override void Visit(Component element)
         {
-            element.LinkRelation2Extensions();
-            element.LinkRelation2LowerLayers();
+            FlatElements.Add(element.ComponentId, element);
+
+            if (element.UpperLayerComponentId.HasValue)
+            {
+                var upperLayerComponent = FlatElements[element.UpperLayerComponentId.Value];
+                element.SetUpperLayerComponent(upperLayerComponent);
+            }
+
         }
     }
+
+    public class LinkRelationVisitorBuilder : VisitorBuilder<LinkRelationVisitor, NullParams> { }
 }

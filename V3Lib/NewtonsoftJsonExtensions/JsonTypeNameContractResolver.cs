@@ -19,6 +19,23 @@ namespace V3Lib.NewtonsoftJsonExtensions
 
         public static JsonTypeNameContractResolver Instance { get { return instance; } }
 
+        // protected override JsonContract CreateContract(Type objectType)
+        // {
+        //     var contract = base.CreateContract(objectType);
+        //     var containerContract = contract as JsonContainerContract;
+        //     if (containerContract != null)
+        //     {
+        //         if (containerContract.ItemTypeNameHandling == null)
+        //         {
+        //             if (objectType.GetCustomAttribute<AddJsonTypeNameAttribute>(false) != null)
+        //             {
+        //                 containerContract.ItemTypeNameHandling = TypeNameHandling.Objects;
+        //             }
+        //         }
+        //     }
+        //     return contract;
+        // }
+
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             return base.CreateProperty(member, memberSerialization)
@@ -29,11 +46,6 @@ namespace V3Lib.NewtonsoftJsonExtensions
         {
             return base.CreateArrayContract(objectType)
                 .ApplyAddTypeNameAttribute();
-        }
-
-        protected override JsonDynamicContract CreateDynamicContract(Type objectType)
-        {
-            return base.CreateDynamicContract(objectType);
         }
     }
 }

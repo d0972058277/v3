@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MessagePack;
 using V3Lib.Filters.Abstractions;
@@ -11,6 +12,7 @@ namespace V3Lib.Models.Conditions
     {
         public string Ref { get; set; }
 
-        public override void Pass(IFilter filter) { }
+        public override bool Pass(IFilter filter) =>
+            throw new InvalidOperationException($"{nameof(ReferenceCondition)} 不可通過過濾器");
     }
 }

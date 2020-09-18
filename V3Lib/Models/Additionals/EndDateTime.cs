@@ -1,10 +1,10 @@
 using System;
 using MessagePack;
 
-namespace V3Lib.Models.Conditions
+namespace V3Lib.Models.Additionals
 {
     [MessagePackObject(true)]
-    public struct StartDateTime : IConditionField
+    public struct EndDateTime
     {
         public DateTime DateTime { get; set; }
     }

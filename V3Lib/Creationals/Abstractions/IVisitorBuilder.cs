@@ -16,11 +16,6 @@ namespace V3Lib.Creationals.Abstractions
 
     public abstract class VisitorBuilder<T, P> : IVisitorBuilder<T, P> where T : IVisitor where P : IParams
     {
-        protected VisitorBuilder(P initialParams)
-        {
-            Params = initialParams;
-        }
-
         public Type ProductType => typeof(T);
 
         public virtual P Params { get; protected set; }
@@ -32,5 +27,7 @@ namespace V3Lib.Creationals.Abstractions
             Params = @params;
             return this;
         }
+
+        object IBuilder.Build() => this.Build();
     }
 }

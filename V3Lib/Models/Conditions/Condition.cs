@@ -8,8 +8,8 @@ namespace V3Lib.Models.Conditions
     [Union(1, typeof(ReferenceCondition))]
     [MessagePackObject(true)]
     [AddJsonTypeName]
-    public abstract class Condition : Additional<Condition>
+    public abstract class Condition
     {
-        public abstract void Pass(IFilter filter);
+        public abstract bool Pass(IFilter filter);
     }
 }
