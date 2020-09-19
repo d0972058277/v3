@@ -30,6 +30,6 @@ namespace V3Lib.Models.Components
 
         public List<Media> Medias { get; set; } = new List<Media>();
 
-        public List<Operation> Operations { get; set; } = new List<Operation>();
+        // public List<Operation> Operations { get; set; } = new List<Operation>();
     }
 }

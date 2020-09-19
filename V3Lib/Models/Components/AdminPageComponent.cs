@@ -4,7 +4,7 @@ using V3Lib.Models.Styles;
 
 namespace V3Lib.Models.Components
 {
-    public class AdminPageComponent : PageComponent
+    public class AdminPageComponent : ConfigPageComponent
     {
         public Dictionary<string, DefinedCondition> Conditions { get; set; } = new Dictionary<string, DefinedCondition>();
 

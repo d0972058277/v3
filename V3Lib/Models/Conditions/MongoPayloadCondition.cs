@@ -14,8 +14,10 @@ namespace V3Lib.Models.Conditions
     {
         [IgnoreMember]
         [JsonIgnore]
+        [BsonIgnoreIfDefault]
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
         public string Key { get; set; }
 

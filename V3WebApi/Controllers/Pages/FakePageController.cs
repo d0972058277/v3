@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using MongoDB.Driver;
 using V3Lib.Models;
 using V3Lib.Models.Components;
 using V3Lib.Models.Conditions;
@@ -14,7 +16,11 @@ namespace V3WebApi.Controllers.Pages
         [HttpGet("FakePage")]
         public async Task<ActionResult<ConfigPageComponent>> Fake([FromQuery] int number, [FromQuery] int subNumber)
         {
-            var conditions = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>("Conditions");
+            var builder = Builders<MongoPayloadCondition>.Filter;
+            var filter = builder.Empty;
+            var defineds = await _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined").Find(filter).ToListAsync();
+            var conditions = defineds.ToDictionary(d => d.Key, d => d.Defined);
+
             var page = new ConfigPageComponent().Fake();
 
             for (int i = 0; i < number; i++)

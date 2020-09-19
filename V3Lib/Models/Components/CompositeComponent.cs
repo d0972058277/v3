@@ -20,7 +20,7 @@ namespace V3Lib.Models.Components
         public override void Isolate()
         {
             base.Isolate();
-            ClearLowerLayer();
+            RemoveLowerLayer();
         }
 
         public virtual void AddLowerLayer(Component component)
@@ -29,15 +29,14 @@ namespace V3Lib.Models.Components
             SubComponents.Add(component);
         }
 
-        public virtual void ClearLowerLayer()
+        public virtual void ClearListOfSubComponents()
         {
-            SubComponents.ForEach(component => component.RemoveUpperLayer());
             SubComponents.Clear();
         }
 
-        public virtual void LinkRelation2LowerLayers()
+        public virtual void RemoveLowerLayer()
         {
-            SubComponents.ForEach(component => component.SetUpperLayerComponent(this));
+            SubComponents.ToList().ForEach(component => RemoveLowerLayer(component));
         }
 
         public virtual void RemoveLowerLayer(Component component)

@@ -16,22 +16,23 @@ namespace V3WebApi.Controllers.Pages
         public async Task<ActionResult<UserPageComponent>> GetUserPageHome()
         {
             var page = new UserPageComponent();
-            var components = await _distributedCache.GetObjectAsync<List<Component>>(Page.Home.ToString());
-            var conditions = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>("Conditions");
 
-            var linkVisitor = _visitorFactory.GetVisitor<LinkRelationVisitor>();
-            components.ForEach(component => component.Accept(linkVisitor));
+            // var components = await _distributedCache.GetObjectAsync<List<Component>>(Page.Home.ToString());
+            // var conditions = await _distributedCache.GetObjectAsync<Dictionary<string, DefinedCondition>>("Conditions");
 
-            var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeRef2DefConditionVisitorBuilder>().SetDefinedConditions(conditions).Build();
-            components.ForEach(component => component.Accept(exchangeVisitor));
+            // var linkVisitor = _visitorFactory.GetVisitor<LinkRelationVisitor>();
+            // components.ForEach(component => component.Accept(linkVisitor));
 
-            var filterVisitor = _visitorFactory.GetBuilder<FilterComponentVisitorBuilder>().SetHideFilter().SetStartDateTimeFilter().SetEndDateTimeFilter().Build();
-            components.ForEach(component => component.Accept(filterVisitor));
+            // var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeRef2DefConditionVisitorBuilder>().SetDefinedConditions(conditions).Build();
+            // components.ForEach(component => component.Accept(exchangeVisitor));
 
-            var removeConditVisitor = _visitorFactory.GetVisitor<RemoveConditionVisitor>();
-            components.ForEach(component => component.Accept(removeConditVisitor));
+            // var filterVisitor = _visitorFactory.GetBuilder<FilterComponentVisitorBuilder>().SetHideFilter().SetStartDateTimeFilter().SetEndDateTimeFilter().Build();
+            // components.ForEach(component => component.Accept(filterVisitor));
 
-            page.SubComponents = components;
+            // var removeConditVisitor = _visitorFactory.GetVisitor<RemoveConditionVisitor>();
+            // components.ForEach(component => component.Accept(removeConditVisitor));
+
+            // page.SubComponents = components;
 
             return Ok(page);
         }

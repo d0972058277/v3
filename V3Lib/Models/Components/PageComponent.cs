@@ -7,5 +7,7 @@ namespace V3Lib.Models.Components
         public string Title { get; set; }
 
         public string SubTitle { get; set; }
+
+        public string Version { get; set; }
     }
 }

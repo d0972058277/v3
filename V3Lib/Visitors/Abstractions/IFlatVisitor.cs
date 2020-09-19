@@ -6,6 +6,6 @@ namespace V3Lib.Visitors.Abstractions
 {
     public interface IFlatVisitor<T> : IVisitor<T> where T : IElement
     {
-        Dictionary<Guid, T> FlatElement { get; }
+        Dictionary<Guid, T> FlatElements { get; }
     }
 }

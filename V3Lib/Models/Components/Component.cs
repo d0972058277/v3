@@ -1,19 +1,36 @@
 using System;
-using System.Collections.Generic;
 using MessagePack;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
+using V3Lib.BsonExtensions;
 using V3Lib.Models.Conditions;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Models.Components
 {
-    [Union(0, typeof(MemberComponent))]
-    [Union(1, typeof(LazyComponent))]
+    // Bson
+    [AddBsonKnowTypes]
+    // MsgPack
     [MessagePackObject(true)]
+    [Union(0, typeof(LazyComponent))]
+    [Union(1, typeof(MemberComponent))]
+    [Union(2, typeof(ConfigPageComponent))]
+    [Union(3, typeof(AdminPageComponent))]
+    [Union(4, typeof(UserPageComponent))]
+    // Json
     [AddJsonTypeName]
     public abstract class Component : IElement
     {
         protected Component _upperLayerComponent;
+
+        [IgnoreMember]
+        [JsonIgnore]
+        [BsonIgnoreIfDefault]
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
         public Guid? UpperLayerComponentId { get; set; } = null;
 
@@ -27,7 +44,10 @@ namespace V3Lib.Models.Components
             return _upperLayerComponent.GetRoot();
         }
 
-        public bool IsRoot() => _upperLayerComponent is null;
+        public bool IsRoot()
+        {
+            return _upperLayerComponent is null;
+        }
 
         public virtual void Isolate()
         {

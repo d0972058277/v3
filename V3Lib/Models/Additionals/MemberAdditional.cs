@@ -37,11 +37,11 @@ namespace V3Lib.Models.Additionals
         /// <summary>
         /// 開始顯示
         /// </summary>
-        public StartDateTime? Start { get; set; }
+        public StartDateTime Start { get; set; }
 
         /// <summary>
         /// 結束顯示
         /// </summary>
-        public EndDateTime? End { get; set; }
+        public EndDateTime End { get; set; }
     }
 }

@@ -12,11 +12,11 @@ namespace V3Lib.Visitors
     {
         public FlatComponentVisitor(NullParams @params) : base(@params) { }
 
-        public Dictionary<Guid, Component> FlatElement { get; } = new Dictionary<Guid, Component>();
+        public Dictionary<Guid, Component> FlatElements { get; } = new Dictionary<Guid, Component>();
 
         public override void Visit(Component element)
         {
-            FlatElement.Add(element.ComponentId, element);
+            FlatElements.Add(element.ComponentId, element);
         }
     }
 

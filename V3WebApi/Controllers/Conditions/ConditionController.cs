@@ -13,14 +13,12 @@ namespace V3WebApi.Controllers.Conditions
     [Route("api/[controller]/v{version:apiVersion}")]
     public partial class ConditionController : ControllerBase
     {
-        protected IDistributedCache _distributedCache;
         protected IMongoClient _mongoClient;
 
-        protected IMongoCollection<MongoPayloadCondition> _collection => _mongoClient.GetDatabase("Conditions").GetCollection<MongoPayloadCondition>("Defined");
+        protected IMongoCollection<MongoPayloadCondition> _collection => _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined");
 
-        public ConditionController(IDistributedCache distributedCache, IMongoClient mongoClient)
+        public ConditionController(IMongoClient mongoClient)
         {
-            _distributedCache = distributedCache;
             _mongoClient = mongoClient;
         }
 
@@ -30,8 +28,7 @@ namespace V3WebApi.Controllers.Conditions
         {
             var builder = Builders<MongoPayloadCondition>.Filter;
             var filter = builder.Empty;
-            var cursor = await _collection.FindAsync(filter);
-            var result = await cursor.ToListAsync();
+            var result = await _collection.Find(filter).ToListAsync();
             return Ok(result);
         }
 
@@ -59,8 +56,7 @@ namespace V3WebApi.Controllers.Conditions
         {
             var builder = Builders<MongoPayloadCondition>.Filter;
             var filter = builder.Eq(c => c.Key, key);
-            var cursor = await _collection.FindAsync(filter);
-            var result = await cursor.SingleAsync();
+            var result = await _collection.Find(filter).SingleAsync();
             return Ok(result);
         }
 

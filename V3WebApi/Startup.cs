@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MessagePack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,16 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using V3Lib;
 using V3Lib.Creationals;
+using V3Lib.Models;
+using V3Lib.Models.Additionals;
+using V3Lib.Models.Components;
+using V3Lib.Models.Conditions;
+using V3Lib.Models.Medias;
+using V3Lib.Models.Operations;
+using V3Lib.Models.Reactions;
+using V3Lib.Models.Styles;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3WebApi.SwashbuckleExtensions;
 
@@ -67,6 +77,8 @@ namespace V3WebApi
 
             // 設定MongoDb的DateTime格式為Local
             BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeKind.Local));
+            // 註冊所有掛上 AddBsonKnowTypesAttribute 的抽象類別
+            BsonClassMapExtensions.RegisterV3ClassMap();
             // MongoDb
             services.AddSingleton<IMongoClient>(sp =>
             {

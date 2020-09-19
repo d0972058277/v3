@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using MongoDB.Driver;
 using V3Lib.Creationals;
 
 namespace V3WebApi.Controllers.Pages
@@ -10,12 +11,13 @@ namespace V3WebApi.Controllers.Pages
     public partial class PageController : ControllerBase
     {
         protected VisitorFactory _visitorFactory;
-        protected IDistributedCache _distributedCache;
 
-        public PageController(IDistributedCache distributedCache, VisitorFactory visitorBuilderFactory)
+        protected IMongoClient _mongoClient;
+
+        public PageController(VisitorFactory visitorBuilderFactory, IMongoClient mongoClient)
         {
-            _distributedCache = distributedCache;
             _visitorFactory = visitorBuilderFactory;
+            _mongoClient = mongoClient;
         }
     }
 }
