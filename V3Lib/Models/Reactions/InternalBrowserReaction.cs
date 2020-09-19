@@ -3,10 +3,5 @@ using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Reactions
 {
-    [MessagePackObject(true)]
-    [AddJsonTypeName]
-    public class InternalBrowserReaction : Reaction
-    {
-
-    }
+    public class InternalBrowserReaction : Reaction { }
 }

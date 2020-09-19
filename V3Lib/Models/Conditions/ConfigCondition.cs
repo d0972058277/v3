@@ -1,16 +1,16 @@
 using System;
+using System.Collections.Generic;
 using MessagePack;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
 using Newtonsoft.Json;
 using V3Lib.Filters.Abstractions;
 using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Conditions
 {
-    [MessagePackObject(true)]
-    [AddJsonTypeName]
-    public class MongoPayloadCondition : Condition
+    public class ConfigCondition : Condition
     {
         [IgnoreMember]
         [JsonIgnore]
@@ -24,6 +24,6 @@ namespace V3Lib.Models.Conditions
         public DefinedCondition Defined { get; set; }
 
         public override bool Pass(IFilter filter) =>
-            throw new InvalidOperationException($"{nameof(MongoPayloadCondition)} 不可通過過濾器");
+            throw new InvalidOperationException($"{nameof(ConfigCondition)} 不可通過過濾器");
     }
 }

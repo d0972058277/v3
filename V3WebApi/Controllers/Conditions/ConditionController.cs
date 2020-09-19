@@ -15,7 +15,7 @@ namespace V3WebApi.Controllers.Conditions
     {
         protected IMongoClient _mongoClient;
 
-        protected IMongoCollection<MongoPayloadCondition> _collection => _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined");
+        protected IMongoCollection<ConfigCondition> _collection => _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined");
 
         public ConditionController(IMongoClient mongoClient)
         {
@@ -24,9 +24,9 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Defined")]
-        public async Task<ActionResult<List<MongoPayloadCondition>>> GetDefineds()
+        public async Task<ActionResult<List<ConfigCondition>>> GetDefineds()
         {
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
             var result = await _collection.Find(filter).ToListAsync();
             return Ok(result);
@@ -34,7 +34,7 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPost("Defined")]
-        public async Task<ActionResult> PostDefined([FromBody] List<MongoPayloadCondition> postDefineds)
+        public async Task<ActionResult> PostDefined([FromBody] List<ConfigCondition> postDefineds)
         {
             await _collection.InsertManyAsync(postDefineds);
             return Ok();
@@ -42,7 +42,7 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPut("Defined")]
-        public async Task<ActionResult> PutDefined([FromBody] List<MongoPayloadCondition> putDefineds)
+        public async Task<ActionResult> PutDefined([FromBody] List<ConfigCondition> putDefineds)
         {
             // TODO: 檢查 Components 有沒有在使用
             await DeleteDefined();
@@ -54,7 +54,7 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined")]
         public async Task<ActionResult> DeleteDefined()
         {
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
             await _collection.DeleteManyAsync(filter);
             return Ok();
@@ -62,9 +62,9 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Defined/{key}")]
-        public async Task<ActionResult<MongoPayloadCondition>> GetDefined([FromRoute] string key)
+        public async Task<ActionResult<ConfigCondition>> GetDefined([FromRoute] string key)
         {
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Eq(c => c.Key, key);
             var result = await _collection.Find(filter).SingleAsync();
             return Ok(result);
@@ -74,8 +74,8 @@ namespace V3WebApi.Controllers.Conditions
         [HttpPost("Defined/{key}")]
         public async Task<ActionResult> PostDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
-            var payload = new MongoPayloadCondition { Key = key, Defined = default };
-            await _collection.InsertOneAsync(payload);
+            var config = new ConfigCondition { Key = key, Defined = default };
+            await _collection.InsertOneAsync(config);
             return Ok();
         }
 
@@ -83,10 +83,10 @@ namespace V3WebApi.Controllers.Conditions
         [HttpPut("Defined/{key}")]
         public async Task<ActionResult> PutDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
-            var payload = new MongoPayloadCondition { Key = key, Defined = default };
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var config = new ConfigCondition { Key = key, Defined = default };
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Eq(c => c.Key, key);
-            var cursor = await _collection.FindOneAndReplaceAsync(filter, payload);
+            var cursor = await _collection.FindOneAndReplaceAsync(filter, config);
             return Ok();
         }
 
@@ -94,7 +94,7 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined/{key}")]
         public async Task<ActionResult<Dictionary<string, DefinedCondition>>> DeleteDefined([FromRoute] string key)
         {
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Eq(c => c.Key, key);
             var cursor = await _collection.FindOneAndDeleteAsync(filter);
             return Ok();

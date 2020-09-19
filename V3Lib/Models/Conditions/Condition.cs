@@ -12,6 +12,7 @@ namespace V3Lib.Models.Conditions
     [MessagePackObject(true)]
     [Union(0, typeof(DefinedCondition))]
     [Union(1, typeof(ReferenceCondition))]
+    [Union(2, typeof(ConfigCondition))]
     // Json
     [AddJsonTypeName]
     public abstract class Condition

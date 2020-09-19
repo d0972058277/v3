@@ -9,8 +9,6 @@ using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Conditions
 {
-    [MessagePackObject(true)]
-    [AddJsonTypeName]
     public class DefinedCondition : Condition
     {
         /// <summary>

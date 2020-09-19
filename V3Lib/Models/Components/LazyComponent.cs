@@ -6,7 +6,6 @@ using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Models.Components
 {
-    [AddJsonTypeName]
     public class LazyComponent : Component
     {
         public string HttpMethod { get; set; } = "Get";

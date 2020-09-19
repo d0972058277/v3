@@ -7,6 +7,8 @@ using V3Lib.Models;
 using V3Lib.Models.Components;
 using V3Lib.Models.Conditions;
 using V3Lib.Models.Styles;
+using V3Lib.Strategies;
+using V3Lib.Strategies.Abstractions;
 using V3Lib.Visitors;
 
 namespace V3WebApi.Controllers.Pages
@@ -17,15 +19,13 @@ namespace V3WebApi.Controllers.Pages
         [HttpGet("Admin/Home")]
         public async Task<ActionResult<Component>> GetAdminPageHome()
         {
-            var componentBuilder = Builders<Component>.Filter;
-            var componentFilter = componentBuilder.Empty;
-            var components = await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").Find(componentFilter).ToListAsync();
-            var configComponent = components.GetTree();
+            var configComponent = await _componentStrategy.GetAsync();
+
             var adminComponent = _mapper.Map<AdminPageComponent>(configComponent);
 
-            var conditionBuilder = Builders<MongoPayloadCondition>.Filter;
+            var conditionBuilder = Builders<ConfigCondition>.Filter;
             var conditionFilter = conditionBuilder.Empty;
-            var conditions = await _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined").Find(conditionFilter).ToListAsync();
+            var conditions = await _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined").Find(conditionFilter).ToListAsync();
             adminComponent.Conditions = conditions.ToDictionary(c => c.Key, c => c.Defined);
 
             adminComponent.Styles = AppDomain.CurrentDomain
@@ -45,11 +45,7 @@ namespace V3WebApi.Controllers.Pages
         [HttpPost("Admin/Home")]
         public async Task<ActionResult> PostAdminPageHome([FromBody] ConfigPageComponent home)
         {
-            var flatVisitor = _visitorFactory.GetVisitor<FlatComponentVisitor>();
-            home.Accept(flatVisitor);
-            var components = flatVisitor.FlatElements.Values.ToList();
-            components.ForEach(component => component.ClearComposite());
-            await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").InsertManyAsync(components);
+            await _componentStrategy.SetAsync(home);
             return Ok();
         }
 
@@ -57,8 +53,7 @@ namespace V3WebApi.Controllers.Pages
         [HttpPut("Admin/Home")]
         public async Task<ActionResult> PutAdminPageHome([FromBody] ConfigPageComponent home)
         {
-            await DeleteAdminPageHome();
-            await PostAdminPageHome(home);
+            await _componentStrategy.SetAsync(home);
             return Ok();
         }
 
@@ -66,9 +61,7 @@ namespace V3WebApi.Controllers.Pages
         [HttpDelete("Admin/Home")]
         public async Task<ActionResult> DeleteAdminPageHome()
         {
-            var builder = Builders<Component>.Filter;
-            var filter = builder.Empty;
-            await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").DeleteManyAsync(filter);
+            await _componentStrategy.RemoveAsync();
             return Ok();
         }
     }

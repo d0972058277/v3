@@ -1,5 +1,5 @@
 var msgPackSettings = {
-    "url": "https://localhost:5001/api/Page/v3.0-patch0/Admin/Home",
+    "url": "https://localhost:5001/api/Condition/v3.0-patch0/FakeDefined?number=2",
     "dataType": "arraybuffer",
     "method": "GET",
     "headers": {

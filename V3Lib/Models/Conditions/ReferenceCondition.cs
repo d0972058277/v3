@@ -6,8 +6,6 @@ using V3Lib.NewtonsoftJsonExtensions;
 
 namespace V3Lib.Models.Conditions
 {
-    [MessagePackObject(true)]
-    [AddJsonTypeName]
     public class ReferenceCondition : Condition
     {
         public string Ref { get; set; }

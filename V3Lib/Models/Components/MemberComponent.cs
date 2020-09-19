@@ -13,7 +13,6 @@ using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Models.Components
 {
-    [AddJsonTypeName]
     public class MemberComponent : CompositeComponent
     {
         public string Title { get; set; }

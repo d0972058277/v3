@@ -16,9 +16,9 @@ namespace V3WebApi.Controllers.Pages
         [HttpGet("FakePage")]
         public async Task<ActionResult<ConfigPageComponent>> Fake([FromQuery] int number, [FromQuery] int subNumber)
         {
-            var builder = Builders<MongoPayloadCondition>.Filter;
+            var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
-            var defineds = await _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined").Find(filter).ToListAsync();
+            var defineds = await _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined").Find(filter).ToListAsync();
             var conditions = defineds.ToDictionary(d => d.Key, d => d.Defined);
 
             var page = new ConfigPageComponent().Fake();
