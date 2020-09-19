@@ -62,7 +62,7 @@ namespace V3WebApi.Controllers.Conditions
         [HttpGet("Defined/{key}")]
         public async Task<ActionResult<ConfigCondition>> GetDefined([FromRoute] string key)
         {
-            _configConditStrategy.CacheKey = key;
+            _configConditStrategy.Key = key;
             var result = await _configConditStrategy.GetAsync();
             return Ok(result);
         }
@@ -89,7 +89,7 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined/{key}")]
         public async Task<ActionResult<Dictionary<string, DefinedCondition>>> DeleteDefined([FromRoute] string key)
         {
-            _configConditStrategy.CacheKey = key;
+            _configConditStrategy.Key = key;
             await _configConditStrategy.RemoveAsync();
             return Ok();
         }
