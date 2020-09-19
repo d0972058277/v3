@@ -9,7 +9,7 @@ using V3Lib.Visitors;
 
 namespace V3Lib.Strategies
 {
-    public class MongoComponentStrategy : IMongoComponentStrategy
+    public class MongoComponentStrategy : IComponentStrategy, IMongoStrategy
     {
         public MongoComponentStrategy(IMongoClient mongoClient, string database, string collection, VisitorFactory visitorFactory)
         {
@@ -43,11 +43,11 @@ namespace V3Lib.Strategies
             return MongoClient.GetDatabase(Database).GetCollection<Component>(Collection).DeleteManyAsync(filter);
         }
 
-        public async Task SetAsync(Component component)
+        public async Task SetAsync(Component entity)
         {
             await RemoveAsync();
             var flatVisitor = _visitorFactory.GetVisitor<FlatComponentVisitor>();
-            component.Accept(flatVisitor);
+            entity.Accept(flatVisitor);
             var flatComponents = flatVisitor.FlatElements.Values.ToList();
             flatComponents.ForEach(flatComponent => flatComponent.ClearComposite());
             await MongoClient.GetDatabase(Database).GetCollection<Component>(Collection).InsertManyAsync(flatComponents);

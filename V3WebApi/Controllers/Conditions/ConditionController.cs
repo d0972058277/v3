@@ -5,6 +5,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Driver;
 using V3Lib.Models;
 using V3Lib.Models.Conditions;
+using V3Lib.Strategies;
+using V3Lib.Strategies.Abstractions;
 
 namespace V3WebApi.Controllers.Conditions
 {
@@ -14,39 +16,37 @@ namespace V3WebApi.Controllers.Conditions
     public partial class ConditionController : ControllerBase
     {
         protected IMongoClient _mongoClient;
-
-        protected IMongoCollection<ConfigCondition> _collection => _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined");
+        protected IConfigConditStrategy _configConditStrategy;
+        protected IConfigConditsStrategy _configConditsStrategy;
 
         public ConditionController(IMongoClient mongoClient)
         {
             _mongoClient = mongoClient;
+            _configConditStrategy = new MongoConfigConditStrategy(_mongoClient, "Condition", "Defined");
+            _configConditsStrategy = new MongoConfigConditsStrategy(_mongoClient, "Condition", "Defined");
         }
 
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Defined")]
         public async Task<ActionResult<List<ConfigCondition>>> GetDefineds()
         {
-            var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Empty;
-            var result = await _collection.Find(filter).ToListAsync();
+            var result = await _configConditsStrategy.GetAsync();
             return Ok(result);
         }
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPost("Defined")]
-        public async Task<ActionResult> PostDefined([FromBody] List<ConfigCondition> postDefineds)
+        public async Task<ActionResult> PostDefined([FromBody] List<ConfigCondition> configs)
         {
-            await _collection.InsertManyAsync(postDefineds);
+            await _configConditsStrategy.SetAsync(configs);
             return Ok();
         }
 
         [MapToApiVersion("3.0-patch0")]
         [HttpPut("Defined")]
-        public async Task<ActionResult> PutDefined([FromBody] List<ConfigCondition> putDefineds)
+        public async Task<ActionResult> PutDefined([FromBody] List<ConfigCondition> configs)
         {
-            // TODO: 檢查 Components 有沒有在使用
-            await DeleteDefined();
-            await PostDefined(putDefineds);
+            await _configConditsStrategy.SetAsync(configs);
             return Ok();
         }
 
@@ -54,9 +54,7 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined")]
         public async Task<ActionResult> DeleteDefined()
         {
-            var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Empty;
-            await _collection.DeleteManyAsync(filter);
+            await _configConditsStrategy.RemoveAsync();
             return Ok();
         }
 
@@ -64,9 +62,8 @@ namespace V3WebApi.Controllers.Conditions
         [HttpGet("Defined/{key}")]
         public async Task<ActionResult<ConfigCondition>> GetDefined([FromRoute] string key)
         {
-            var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Eq(c => c.Key, key);
-            var result = await _collection.Find(filter).SingleAsync();
+            _configConditStrategy.CacheKey = key;
+            var result = await _configConditStrategy.GetAsync();
             return Ok(result);
         }
 
@@ -75,7 +72,7 @@ namespace V3WebApi.Controllers.Conditions
         public async Task<ActionResult> PostDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
             var config = new ConfigCondition { Key = key, Defined = default };
-            await _collection.InsertOneAsync(config);
+            await _configConditStrategy.SetAsync(config);
             return Ok();
         }
 
@@ -84,9 +81,7 @@ namespace V3WebApi.Controllers.Conditions
         public async Task<ActionResult> PutDefined([FromRoute] string key, [FromBody] DefinedCondition defined)
         {
             var config = new ConfigCondition { Key = key, Defined = default };
-            var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Eq(c => c.Key, key);
-            var cursor = await _collection.FindOneAndReplaceAsync(filter, config);
+            await _configConditStrategy.SetAsync(config);
             return Ok();
         }
 
@@ -94,9 +89,8 @@ namespace V3WebApi.Controllers.Conditions
         [HttpDelete("Defined/{key}")]
         public async Task<ActionResult<Dictionary<string, DefinedCondition>>> DeleteDefined([FromRoute] string key)
         {
-            var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Eq(c => c.Key, key);
-            var cursor = await _collection.FindOneAndDeleteAsync(filter);
+            _configConditStrategy.CacheKey = key;
+            await _configConditStrategy.RemoveAsync();
             return Ok();
         }
     }

@@ -20,23 +20,11 @@ namespace V3WebApi.Controllers.Pages
         public async Task<ActionResult<Component>> GetAdminPageHome()
         {
             var configComponent = await _componentStrategy.GetAsync();
+            var conditions = await _configConditsStrategy.GetAsync();
 
             var adminComponent = _mapper.Map<AdminPageComponent>(configComponent);
 
-            var conditionBuilder = Builders<ConfigCondition>.Filter;
-            var conditionFilter = conditionBuilder.Empty;
-            var conditions = await _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined").Find(conditionFilter).ToListAsync();
             adminComponent.Conditions = conditions.ToDictionary(c => c.Key, c => c.Defined);
-
-            adminComponent.Styles = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .SelectMany(a => a.DefinedTypes
-                    .Where(type =>
-                        typeof(Style).IsAssignableFrom(type) &&
-                        type.IsClass &&
-                        !type.IsAbstract))
-                .Select(style => (Style) Activator.CreateInstance(style))
-                .ToList();
 
             return Ok(adminComponent);
         }

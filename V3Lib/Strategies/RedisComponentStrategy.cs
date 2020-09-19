@@ -5,25 +5,31 @@ using V3Lib.Strategies.Abstractions;
 
 namespace V3Lib.Strategies
 {
-    public class RedisComponentStrategy : IRedisComponentStrategy
+    public class RedisComponentStrategy : IComponentStrategy, IRedisStrategy
     {
+        public RedisComponentStrategy(IDistributedCache cache, string cacheKey)
+        {
+            Cache = cache;
+            CacheKey = cacheKey;
+        }
+
         public IDistributedCache Cache { get; }
 
-        public string Key { get; }
+        public string CacheKey { get; }
 
         public Task<Component> GetAsync()
         {
-            return Cache.GetObjectAsync<Component>(Key);
+            return Cache.GetObjectAsync<Component>(CacheKey);
         }
 
         public Task RemoveAsync()
         {
-            return Cache.RemoveAsync(Key);
+            return Cache.RemoveAsync(CacheKey);
         }
 
-        public Task SetAsync(Component component)
+        public Task SetAsync(Component entity)
         {
-            return Cache.SetObjectAsync<Component>(Key, component);
+            return Cache.SetObjectAsync<Component>(CacheKey, entity);
         }
     }
 }

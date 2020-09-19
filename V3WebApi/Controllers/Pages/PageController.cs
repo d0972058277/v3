@@ -16,8 +16,8 @@ namespace V3WebApi.Controllers.Pages
         protected VisitorFactory _visitorFactory;
         protected IMongoClient _mongoClient;
         protected IMapper _mapper;
-
         protected IComponentStrategy _componentStrategy;
+        protected IConfigConditsStrategy _configConditsStrategy;
 
         public PageController(VisitorFactory visitorBuilderFactory, IMongoClient mongoClient, IMapper mapper)
         {
@@ -26,6 +26,7 @@ namespace V3WebApi.Controllers.Pages
             _mapper = mapper;
 
             _componentStrategy = new MongoComponentStrategy(_mongoClient, "Component", "Home", _visitorFactory);
+            _configConditsStrategy = new MongoConfigConditsStrategy(_mongoClient, "Condition", "Defined");
         }
     }
 }
