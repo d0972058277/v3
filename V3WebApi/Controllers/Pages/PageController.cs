@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Driver;
@@ -11,13 +12,14 @@ namespace V3WebApi.Controllers.Pages
     public partial class PageController : ControllerBase
     {
         protected VisitorFactory _visitorFactory;
-
         protected IMongoClient _mongoClient;
+        protected IMapper _mapper;
 
-        public PageController(VisitorFactory visitorBuilderFactory, IMongoClient mongoClient)
+        public PageController(VisitorFactory visitorBuilderFactory, IMongoClient mongoClient, IMapper mapper)
         {
             _visitorFactory = visitorBuilderFactory;
             _mongoClient = mongoClient;
+            _mapper = mapper;
         }
     }
 }

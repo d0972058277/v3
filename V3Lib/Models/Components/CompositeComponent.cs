@@ -37,6 +37,7 @@ namespace V3Lib.Models.Components
         public virtual void RemoveLowerLayer()
         {
             SubComponents.ToList().ForEach(component => RemoveLowerLayer(component));
+            ClearListOfSubComponents();
         }
 
         public virtual void RemoveLowerLayer(Component component)

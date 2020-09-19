@@ -9,14 +9,26 @@ namespace V3Lib
     {
         public static void RegisterV3ClassMap()
         {
-            var rootTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
-                .Where(type => type.GetCustomAttributes(typeof(AddBsonKnowTypesAttribute), false).Any() && type.IsClass && type.IsAbstract).ToList();
+            var rootTypes = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(assembly => assembly
+                    .GetTypes())
+                .Where(type =>
+                    type.GetCustomAttributes(typeof(AddBsonKnowTypesAttribute), false).Any() &&
+                    type.IsClass &&
+                    type.IsAbstract)
+                .ToList();
 
             foreach (var rootType in rootTypes)
             {
-                var subTypes = AppDomain.CurrentDomain.GetAssemblies()
+                var subTypes = AppDomain.CurrentDomain
+                    .GetAssemblies()
                     .SelectMany(assembly => assembly.GetTypes())
-                    .Where(type => rootType.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract).ToList();
+                    .Where(type =>
+                        rootType.IsAssignableFrom(type) &&
+                        type.IsClass &&
+                        !type.IsAbstract)
+                    .ToList();
 
                 var bsonClassMap = new BsonClassMap(rootType);
                 bsonClassMap.AutoMap();

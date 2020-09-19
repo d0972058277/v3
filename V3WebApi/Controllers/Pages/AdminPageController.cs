@@ -19,22 +19,30 @@ namespace V3WebApi.Controllers.Pages
     {
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Admin/Home")]
-        public async Task<ActionResult<List<Component>>> GetAdminPageHome()
+        public async Task<ActionResult<Component>> GetAdminPageHome()
         {
-            // var builder = Builders<BsonDocument>.Filter;
-            // var filter = builder.Empty;
-            // var bsonDocument = await _mongoClient.GetDatabase("Component").GetCollection<BsonDocument>("Home").Find(filter).ToListAsync();
+            var componentBuilder = Builders<Component>.Filter;
+            var componentFilter = componentBuilder.Empty;
+            var components = await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").Find(componentFilter).ToListAsync();
+            var configComponent = components.GetTree();
+            var adminComponent = _mapper.Map<AdminPageComponent>(configComponent);
 
-            // foreach (var component in bsonDocument)
-            // {
-            //     var test = BsonSerializer.Deserialize<Component>(component);
-            // }
+            var conditionBuilder = Builders<MongoPayloadCondition>.Filter;
+            var conditionFilter = conditionBuilder.Empty;
+            var conditions = await _mongoClient.GetDatabase("Condition").GetCollection<MongoPayloadCondition>("Defined").Find(conditionFilter).ToListAsync();
+            adminComponent.Conditions = conditions.ToDictionary(c => c.Key, c => c.Defined);
 
-            var cbuilder = Builders<Component>.Filter;
-            var cfilter = cbuilder.Empty;
-            var components = await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").Find(cfilter).ToListAsync();
+            adminComponent.Styles = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(a => a.DefinedTypes
+                    .Where(type =>
+                        typeof(Style).IsAssignableFrom(type) &&
+                        type.IsClass &&
+                        !type.IsAbstract))
+                .Select(style => (Style) Activator.CreateInstance(style))
+                .ToList();
 
-            return Ok(components);
+            return Ok(adminComponent);
         }
 
         [MapToApiVersion("3.0-patch0")]
@@ -44,10 +52,8 @@ namespace V3WebApi.Controllers.Pages
             var flatVisitor = _visitorFactory.GetVisitor<FlatComponentVisitor>();
             home.Accept(flatVisitor);
             var components = flatVisitor.FlatElements.Values.ToList();
-            components.ForEach(component => component.ClearSubComponents());
-
+            components.ForEach(component => component.ClearComposite());
             await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").InsertManyAsync(components);
-
             return Ok();
         }
     }
