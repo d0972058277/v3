@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using V3Lib.Models;
 using V3Lib.Models.Components;
@@ -54,6 +50,25 @@ namespace V3WebApi.Controllers.Pages
             var components = flatVisitor.FlatElements.Values.ToList();
             components.ForEach(component => component.ClearComposite());
             await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").InsertManyAsync(components);
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpPut("Admin/Home")]
+        public async Task<ActionResult> PutAdminPageHome([FromBody] ConfigPageComponent home)
+        {
+            await DeleteAdminPageHome();
+            await PostAdminPageHome(home);
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpDelete("Admin/Home")]
+        public async Task<ActionResult> DeleteAdminPageHome()
+        {
+            var builder = Builders<Component>.Filter;
+            var filter = builder.Empty;
+            await _mongoClient.GetDatabase("Component").GetCollection<Component>("Home").DeleteManyAsync(filter);
             return Ok();
         }
     }

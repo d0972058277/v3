@@ -41,6 +41,16 @@ namespace V3WebApi.Controllers.Conditions
         }
 
         [MapToApiVersion("3.0-patch0")]
+        [HttpPut("Defined")]
+        public async Task<ActionResult> PutDefined([FromBody] List<MongoPayloadCondition> putDefineds)
+        {
+            // TODO: 檢查 Components 有沒有在使用
+            await DeleteDefined();
+            await PostDefined(putDefineds);
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
         [HttpDelete("Defined")]
         public async Task<ActionResult> DeleteDefined()
         {
