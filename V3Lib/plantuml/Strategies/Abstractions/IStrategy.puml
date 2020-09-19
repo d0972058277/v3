@@ -1,0 +1,21 @@
+@startuml
+interface IStrategy {
+}
+interface IMongoStrategy {
+    Database : string <<get>>
+    Collection : string <<get>>
+}
+interface IRedisStrategy {
+    CacheKey : string <<get>>
+}
+interface "IStrategy`1"<T> {
+    GetAsync() : Task<T>
+    SetAsync(entity:T) : Task
+    RemoveAsync() : Task
+}
+IStrategy <|-- IMongoStrategy
+IMongoStrategy --> "MongoClient" IMongoClient
+IStrategy <|-- IRedisStrategy
+IRedisStrategy --> "Cache" IDistributedCache
+IStrategy <|-- "IStrategy`1"
+@enduml

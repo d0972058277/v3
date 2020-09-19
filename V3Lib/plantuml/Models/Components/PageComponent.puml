@@ -1,0 +1,8 @@
+@startuml
+abstract class PageComponent {
+    + Title : string <<get>> <<set>>
+    + SubTitle : string <<get>> <<set>>
+    + Version : string <<get>> <<set>>
+}
+CompositeComponent <|-- PageComponent
+@enduml

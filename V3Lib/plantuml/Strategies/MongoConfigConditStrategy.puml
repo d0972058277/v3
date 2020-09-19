@@ -1,0 +1,25 @@
+@startuml
+class MongoConfigConditStrategy {
+    + MongoConfigConditStrategy(mongoClient:IMongoClient, database:string, collection:string)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + Key : string <<get>> <<set>>
+    + GetAsync() : Task<ConfigCondition>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:ConfigCondition) : Task
+}
+class MongoConfigConditsStrategy {
+    + MongoConfigConditsStrategy(mongoClient:IMongoClient, database:string, collection:string)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + GetAsync() : Task<List<ConfigCondition>>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:List<ConfigCondition>) : Task
+}
+IConfigConditStrategy <|-- MongoConfigConditStrategy
+IMongoStrategy <|-- MongoConfigConditStrategy
+MongoConfigConditStrategy --> "MongoClient" IMongoClient
+IConfigConditsStrategy <|-- MongoConfigConditsStrategy
+IMongoStrategy <|-- MongoConfigConditsStrategy
+MongoConfigConditsStrategy --> "MongoClient" IMongoClient
+@enduml

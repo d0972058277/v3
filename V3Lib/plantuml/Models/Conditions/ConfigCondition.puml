@@ -1,0 +1,9 @@
+@startuml
+class ConfigCondition {
+    + Id : string <<get>> <<set>>
+    + Key : string <<get>> <<set>>
+    + <<override>> Pass(filter:IFilter) : bool
+}
+Condition <|-- ConfigCondition
+ConfigCondition --> "Defined" DefinedCondition
+@enduml

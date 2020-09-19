@@ -1,0 +1,7 @@
+@startuml
+interface IComponentStrategy {
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<Component>" <|-- IComponentStrategy
+@enduml

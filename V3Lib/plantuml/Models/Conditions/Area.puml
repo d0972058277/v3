@@ -1,0 +1,8 @@
+@startuml
+class Area {
+    + Name : string <<get>> <<set>>
+}
+class "HashSet`1"<T> {
+}
+Area o-> "Villages<Village>" "HashSet`1"
+@enduml

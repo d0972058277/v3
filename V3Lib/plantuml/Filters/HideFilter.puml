@@ -1,0 +1,9 @@
+@startuml
+class HideFilter {
+    + HideFilter(innerFilter:IFilter)
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- HideFilter
+IFilterDecorator <|-- HideFilter
+HideFilter --> "InnerFilter" IFilter
+@enduml

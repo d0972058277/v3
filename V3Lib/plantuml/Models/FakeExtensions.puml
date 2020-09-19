@@ -1,0 +1,15 @@
+@startuml
+class FakeExtensions <<static>> {
+    + {static} RandomName : string <<get>>
+    + {static} RandomBoolean : bool <<get>>
+    + {static} RandomNumber : int <<get>>
+    + {static} RandomPeek(enumable:IEnumerable<T>) : T
+    + {static} Fake(extension:MemberAdditional) : MemberAdditional
+    + {static} Fake(condition:DefinedCondition) : DefinedCondition
+    + {static} Fake(component:MemberComponent, conditions:Dictionary<string, DefinedCondition>, subNumber:int) : MemberComponent
+    + {static} Fake(component:MemberComponent, conditions:Dictionary<string, DefinedCondition>) : MemberComponent
+    + {static} Fake(component:LazyComponent, conditions:Dictionary<string, DefinedCondition>) : LazyComponent
+    + {static} Fake(component:Component, conditions:Dictionary<string, DefinedCondition>, subNumber:int) : Component
+    + {static} Fake(component:ConfigPageComponent) : ConfigPageComponent
+}
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+class ExchangeRef2DefConditionVisitor {
+    + ExchangeRef2DefConditionVisitor(defConditionparams:DefConditionParams)
+    + <<override>> Visit(element:Component) : void
+}
+class ExchangeRef2DefConditionVisitorBuilder {
+    + ExchangeRef2DefConditionVisitorBuilder()
+}
+class ExchangeRef2DefConditionVisitorBuilderExtensions <<static>> {
+    + {static} SetDefinedConditions(builder:IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams>, conditions:Dictionary<string, DefinedCondition>) : IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams>
+}
+class "VisitorBase`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- ExchangeRef2DefConditionVisitor
+ExchangeRef2DefConditionVisitor --> "DefConditionParams" DefConditionParams
+ExchangeRef2DefConditionVisitor --> "Conditions<string,DefinedCondition>" "Dictionary`2"
+"VisitorBuilder`2" "<ExchangeRef2DefConditionVisitor,DefConditionParams>" <|-- ExchangeRef2DefConditionVisitorBuilder
+@enduml

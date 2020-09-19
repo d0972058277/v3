@@ -1,0 +1,17 @@
+@startuml
+class LinkRelationVisitor {
+    + LinkRelationVisitor(@params:IParams)
+    + <<override>> Visit(element:Component) : void
+}
+class LinkRelationVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- LinkRelationVisitor
+LinkRelationVisitor o-> "FlatElements<Guid,Component>" "Dictionary`2"
+"VisitorBuilder`2" "<LinkRelationVisitor,NullParams>" <|-- LinkRelationVisitorBuilder
+@enduml

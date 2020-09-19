@@ -1,0 +1,9 @@
+@startuml
+class VisitorFactory {
+    + VisitorFactory(serviceProvider:IServiceProvider)
+    + GetBuilder() : T
+    + GetVisitor() : T
+    Create() : T
+}
+ISimpleFactory <|-- VisitorFactory
+@enduml

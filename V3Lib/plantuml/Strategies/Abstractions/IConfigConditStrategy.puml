@@ -1,0 +1,11 @@
+@startuml
+interface IConfigConditStrategy {
+    Key : string <<get>> <<set>>
+}
+interface IConfigConditsStrategy {
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<ConfigCondition>" <|-- IConfigConditStrategy
+"IStrategy`1" "<List<ConfigCondition>>" <|-- IConfigConditsStrategy
+@enduml

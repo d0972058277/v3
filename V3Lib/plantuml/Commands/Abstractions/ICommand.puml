@@ -1,0 +1,6 @@
+@startuml
+interface ICommand {
+    ExecuteAsync() : Task
+}
+ICommand --> "Receiver" IReceiver
+@enduml

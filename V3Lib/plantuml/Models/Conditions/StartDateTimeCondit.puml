@@ -1,0 +1,6 @@
+@startuml
+class StartDateTimeCondit {
+}
+IConditionField <|-- StartDateTimeCondit
+StartDateTimeCondit --> "DateTime" DateTime
+@enduml

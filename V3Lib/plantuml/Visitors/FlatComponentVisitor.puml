@@ -1,0 +1,20 @@
+@startuml
+class FlatComponentVisitor {
+    + FlatComponentVisitor(@params:NullParams)
+    + <<override>> Visit(element:Component) : void
+}
+class FlatComponentVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "IFlatVisitor`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- FlatComponentVisitor
+"IFlatVisitor`1" "<Component>" <|-- FlatComponentVisitor
+FlatComponentVisitor o-> "FlatElements<Guid,Component>" "Dictionary`2"
+"VisitorBuilder`2" "<FlatComponentVisitor,NullParams>" <|-- FlatComponentVisitorBuilder
+@enduml

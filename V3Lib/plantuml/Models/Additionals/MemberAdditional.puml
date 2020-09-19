@@ -1,0 +1,14 @@
+@startuml
+class MemberAdditional {
+}
+class "HashSet`1"<T> {
+}
+Additional <|-- MemberAdditional
+MemberAdditional --> "GA" GoogleAnalytics
+MemberAdditional --> "Point" Point
+MemberAdditional --> "Number" Number
+MemberAdditional o-> "Tags<Tag>" "HashSet`1"
+MemberAdditional --> "Ad" Ad
+MemberAdditional --> "Start" StartDateTime
+MemberAdditional --> "End" EndDateTime
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class ContractResolverExtensions <<static>> {
+    + {static} ApplyAddTypeNameAttribute(jsonProperty:JsonProperty) : JsonProperty
+    + {static} ApplyAddTypeNameAttribute(contract:JsonArrayContract) : JsonArrayContract
+}
+@enduml

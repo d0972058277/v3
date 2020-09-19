@@ -1,0 +1,9 @@
+@startuml
+abstract class "VisitorBase`1"<T> {
+    + {abstract} Visit(element:T) : void
+    + <<virtual>> Visit(element:IElement) : void
+}
+class "IVisitor`1"<T> {
+}
+"IVisitor`1" "<T>" <|-- "VisitorBase`1"
+@enduml

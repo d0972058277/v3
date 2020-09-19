@@ -1,0 +1,5 @@
+@startuml
+class AudioMedia {
+}
+Media <|-- AudioMedia
+@enduml

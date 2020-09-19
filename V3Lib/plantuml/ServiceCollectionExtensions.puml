@@ -1,0 +1,5 @@
+@startuml
+class ServiceCollectionExtensions <<static>> {
+    + {static} AddV3(services:IServiceCollection) : IServiceCollection
+}
+@enduml

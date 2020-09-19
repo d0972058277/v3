@@ -1,0 +1,5 @@
+@startuml
+class Number {
+    + Value : decimal <<get>> <<set>>
+}
+@enduml

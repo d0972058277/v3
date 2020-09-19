@@ -1,0 +1,12 @@
+@startuml
+class LocationFilter {
+    + LocationFilter(innerFilter:IFilter, locations:List<Location>)
+    + Filter(conditionField:IConditionField) : bool
+}
+class "List`1"<T> {
+}
+IFilter <|-- LocationFilter
+IFilterDecorator <|-- LocationFilter
+LocationFilter --> "InnerFilter" IFilter
+LocationFilter --> "Locations<Location>" "List`1"
+@enduml

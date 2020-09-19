@@ -1,0 +1,5 @@
+@startuml
+class ExternalBrowserReaction {
+}
+Reaction <|-- ExternalBrowserReaction
+@enduml

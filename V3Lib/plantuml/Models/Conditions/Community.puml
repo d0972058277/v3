@@ -1,0 +1,16 @@
+@startuml
+class CommunityStructs {
+}
+class Community {
+    + Id : string <<get>> <<set>>
+}
+class CommunityStruct <<struct>> {
+    + Id : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+"List`1" "<CommunityStruct>" <|-- CommunityStructs
+IConditionField <|-- CommunityStructs
+IConditionField <|-- Community
+IConditionField <|-- CommunityStruct
+@enduml

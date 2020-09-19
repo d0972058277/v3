@@ -1,0 +1,5 @@
+@startuml
+class Village {
+    + Name : string <<get>> <<set>>
+}
+@enduml

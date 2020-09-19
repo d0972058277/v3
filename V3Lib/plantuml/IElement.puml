@@ -1,0 +1,6 @@
+@startuml
+interface IElement {
+    Accept(visitor:IVisitor) : void
+}
+IElement --> "ComponentId" Guid
+@enduml

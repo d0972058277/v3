@@ -1,0 +1,5 @@
+@startuml
+interface "IPrototype`1"<T> {
+    Clone() : T
+}
+@enduml

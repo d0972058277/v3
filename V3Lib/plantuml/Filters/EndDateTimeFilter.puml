@@ -1,0 +1,9 @@
+@startuml
+class EndDateTimeFilter {
+    + EndDateTimeFilter(innerFilter:IFilter)
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- EndDateTimeFilter
+IFilterDecorator <|-- EndDateTimeFilter
+EndDateTimeFilter --> "InnerFilter" IFilter
+@enduml

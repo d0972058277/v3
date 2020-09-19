@@ -1,0 +1,8 @@
+@startuml
+interface "IFilterVisitor`1"<T> {
+}
+class "IVisitor`1"<T> {
+}
+"IVisitor`1" "<T>" <|-- "IFilterVisitor`1"
+"IFilterVisitor`1" --> "Filter" IFilter
+@enduml

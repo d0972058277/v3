@@ -1,0 +1,7 @@
+@startuml
+class ComponentExtensions <<static>> {
+    + {static} ClearComposite(component:Component) : Component
+    + {static} AddComposite(component:Component, subComponent:Component) : Component
+    + {static} GetTree(components:IEnumerable<Component>) : Component
+}
+@enduml

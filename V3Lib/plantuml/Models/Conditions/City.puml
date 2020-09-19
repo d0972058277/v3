@@ -1,0 +1,9 @@
+@startuml
+class City {
+    + Name : string <<get>> <<set>>
+}
+class "HashSet`1"<T> {
+}
+IConditionField <|-- City
+City o-> "Areas<Area>" "HashSet`1"
+@enduml

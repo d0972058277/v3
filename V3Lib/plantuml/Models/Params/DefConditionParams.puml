@@ -1,0 +1,8 @@
+@startuml
+class DefConditionParams {
+}
+class "Dictionary`2"<T1,T2> {
+}
+IParams <|-- DefConditionParams
+DefConditionParams o-> "Conditions<string,DefinedCondition>" "Dictionary`2"
+@enduml

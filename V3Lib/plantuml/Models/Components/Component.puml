@@ -1,0 +1,15 @@
+@startuml
+abstract class Component {
+    + Id : string <<get>> <<set>>
+    + UpperLayerComponentId : Guid? <<get>> <<set>> = null
+    + GetRoot() : Component
+    + IsRoot() : bool
+    + <<virtual>> Isolate() : void
+    + RemoveUpperLayer() : void
+    + SetUpperLayerComponent(component:Component) : void
+    + {abstract} Accept(visitor:IVisitor) : void
+}
+IElement <|-- Component
+Component o-> "ComponentId" Guid
+Component --> "Condition" Condition
+@enduml

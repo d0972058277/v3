@@ -1,0 +1,14 @@
+@startuml
+class RemoveConditionVisitor {
+    + RemoveConditionVisitor(@params:NullParams)
+    + <<override>> Visit(element:Component) : void
+}
+class RemoveConditionVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- RemoveConditionVisitor
+"VisitorBuilder`2" "<RemoveConditionVisitor,NullParams>" <|-- RemoveConditionVisitorBuilder
+@enduml

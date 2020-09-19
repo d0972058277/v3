@@ -1,0 +1,5 @@
+@startuml
+class RecommendationStyle {
+}
+Style <|-- RecommendationStyle
+@enduml

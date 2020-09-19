@@ -1,0 +1,5 @@
+@startuml
+interface ISimpleFactory {
+    Create() : T
+}
+@enduml

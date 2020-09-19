@@ -1,0 +1,5 @@
+@startuml
+class BsonClassMapExtensions <<static>> {
+    + {static} RegisterV3ClassMap() : void
+}
+@enduml

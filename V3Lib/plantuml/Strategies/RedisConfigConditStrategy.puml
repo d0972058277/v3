@@ -1,0 +1,23 @@
+@startuml
+class RedisConfigConditStrategy {
+    + RedisConfigConditStrategy(cache:IDistributedCache, cacheKey:string)
+    + Key : string <<get>> <<set>>
+    + CacheKey : string <<get>>
+    + <<async>> GetAsync() : Task<ConfigCondition>
+    + <<async>> RemoveAsync() : Task
+    + <<async>> SetAsync(entity:ConfigCondition) : Task
+}
+class RedisConfigConditsStrategy {
+    + RedisConfigConditsStrategy(cache:IDistributedCache, cacheKey:string)
+    + CacheKey : string <<get>>
+    + GetAsync() : Task<List<ConfigCondition>>
+    + RemoveAsync() : Task
+    + SetAsync(entity:List<ConfigCondition>) : Task
+}
+IConfigConditStrategy <|-- RedisConfigConditStrategy
+IRedisStrategy <|-- RedisConfigConditStrategy
+RedisConfigConditStrategy --> "Cache" IDistributedCache
+IConfigConditsStrategy <|-- RedisConfigConditsStrategy
+IRedisStrategy <|-- RedisConfigConditsStrategy
+RedisConfigConditsStrategy --> "Cache" IDistributedCache
+@enduml

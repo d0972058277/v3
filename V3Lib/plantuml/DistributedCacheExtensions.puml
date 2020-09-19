@@ -1,0 +1,6 @@
+@startuml
+class DistributedCacheExtensions <<static>> {
+    + {static} <<async>> SetObjectAsync(distributedCache:IDistributedCache, key:string, value:T) : Task
+    + {static} <<async>> GetObjectAsync(distributedCache:IDistributedCache, key:string) : Task<T>
+}
+@enduml

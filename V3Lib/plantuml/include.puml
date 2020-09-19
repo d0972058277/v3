@@ -1,0 +1,622 @@
+@startuml
+interface IConditionField {
+}
+interface IElement {
+    Accept(visitor:IVisitor) : void
+}
+IElement --> "ComponentId" Guid
+class BsonClassMapExtensions <<static>> {
+    + {static} RegisterV3ClassMap() : void
+}
+interface IParams {
+}
+class DistributedCacheExtensions <<static>> {
+    + {static} <<async>> SetObjectAsync(distributedCache:IDistributedCache, key:string, value:T) : Task
+    + {static} <<async>> GetObjectAsync(distributedCache:IDistributedCache, key:string) : Task<T>
+}
+class ServiceCollectionExtensions <<static>> {
+    + {static} AddV3(services:IServiceCollection) : IServiceCollection
+}
+class AddJsonTypeNameAttribute {
+}
+class JsonTypeNameContractResolver {
+    {static} JsonTypeNameContractResolver()
+}
+DefaultContractResolver <|-- JsonTypeNameContractResolver
+JsonTypeNameContractResolver --> "instance" JsonTypeNameContractResolver
+JsonTypeNameContractResolver --> "Instance" JsonTypeNameContractResolver
+class ContractResolverExtensions <<static>> {
+    + {static} ApplyAddTypeNameAttribute(jsonProperty:JsonProperty) : JsonProperty
+    + {static} ApplyAddTypeNameAttribute(contract:JsonArrayContract) : JsonArrayContract
+}
+class StartDateTimeFilter {
+    + StartDateTimeFilter(innerFilter:IFilter)
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- StartDateTimeFilter
+IFilterDecorator <|-- StartDateTimeFilter
+StartDateTimeFilter --> "InnerFilter" IFilter
+class LocationFilter {
+    + LocationFilter(innerFilter:IFilter, locations:List<Location>)
+    + Filter(conditionField:IConditionField) : bool
+}
+class "List`1"<T> {
+}
+IFilter <|-- LocationFilter
+IFilterDecorator <|-- LocationFilter
+LocationFilter --> "InnerFilter" IFilter
+LocationFilter --> "Locations<Location>" "List`1"
+class CommunityFilter {
+    + CommunityFilter(innerFilter:IFilter, communityStructs:List<CommunityStruct>)
+    + Filter(conditionField:IConditionField) : bool
+}
+class "List`1"<T> {
+}
+IFilter <|-- CommunityFilter
+IFilterDecorator <|-- CommunityFilter
+CommunityFilter --> "InnerFilter" IFilter
+CommunityFilter --> "CommunityStructs<CommunityStruct>" "List`1"
+class HideFilter {
+    + HideFilter(innerFilter:IFilter)
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- HideFilter
+IFilterDecorator <|-- HideFilter
+HideFilter --> "InnerFilter" IFilter
+class EndDateTimeFilter {
+    + EndDateTimeFilter(innerFilter:IFilter)
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- EndDateTimeFilter
+IFilterDecorator <|-- EndDateTimeFilter
+EndDateTimeFilter --> "InnerFilter" IFilter
+class NullFilter {
+    + Filter(conditionField:IConditionField) : bool
+}
+IFilter <|-- NullFilter
+class LinkRelationVisitor {
+    + LinkRelationVisitor(@params:IParams)
+    + <<override>> Visit(element:Component) : void
+}
+class LinkRelationVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- LinkRelationVisitor
+LinkRelationVisitor o-> "FlatElements<Guid,Component>" "Dictionary`2"
+"VisitorBuilder`2" "<LinkRelationVisitor,NullParams>" <|-- LinkRelationVisitorBuilder
+class FilterComponentVisitor {
+    + FilterComponentVisitor(filter:IFilter)
+    + <<override>> Visit(element:Component) : void
+}
+class FilterComponentVisitorBuilder {
+    + FilterComponentVisitorBuilder()
+}
+class FilterComponentVisitorBuilderExtensions <<static>> {
+    + {static} SetHideFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetStartDateTimeFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetEndDateTimeFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetCommunityFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>, communities:List<CommunityStruct>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetLocationFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>, locations:List<Location>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+}
+class "VisitorBase`1"<T> {
+}
+class "IFilterVisitor`1"<T> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- FilterComponentVisitor
+"IFilterVisitor`1" "<Component>" <|-- FilterComponentVisitor
+FilterComponentVisitor --> "Filter" IFilter
+"VisitorBuilder`2" "<FilterComponentVisitor,IFilter>" <|-- FilterComponentVisitorBuilder
+class RemoveConditionVisitor {
+    + RemoveConditionVisitor(@params:NullParams)
+    + <<override>> Visit(element:Component) : void
+}
+class RemoveConditionVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- RemoveConditionVisitor
+"VisitorBuilder`2" "<RemoveConditionVisitor,NullParams>" <|-- RemoveConditionVisitorBuilder
+class FlatComponentVisitor {
+    + FlatComponentVisitor(@params:NullParams)
+    + <<override>> Visit(element:Component) : void
+}
+class FlatComponentVisitorBuilder {
+}
+class "VisitorBase`1"<T> {
+}
+class "IFlatVisitor`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- FlatComponentVisitor
+"IFlatVisitor`1" "<Component>" <|-- FlatComponentVisitor
+FlatComponentVisitor o-> "FlatElements<Guid,Component>" "Dictionary`2"
+"VisitorBuilder`2" "<FlatComponentVisitor,NullParams>" <|-- FlatComponentVisitorBuilder
+class ExchangeRef2DefConditionVisitor {
+    + ExchangeRef2DefConditionVisitor(defConditionparams:DefConditionParams)
+    + <<override>> Visit(element:Component) : void
+}
+class ExchangeRef2DefConditionVisitorBuilder {
+    + ExchangeRef2DefConditionVisitorBuilder()
+}
+class ExchangeRef2DefConditionVisitorBuilderExtensions <<static>> {
+    + {static} SetDefinedConditions(builder:IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams>, conditions:Dictionary<string, DefinedCondition>) : IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams>
+}
+class "VisitorBase`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- ExchangeRef2DefConditionVisitor
+ExchangeRef2DefConditionVisitor --> "DefConditionParams" DefConditionParams
+ExchangeRef2DefConditionVisitor --> "Conditions<string,DefinedCondition>" "Dictionary`2"
+"VisitorBuilder`2" "<ExchangeRef2DefConditionVisitor,DefConditionParams>" <|-- ExchangeRef2DefConditionVisitorBuilder
+class RedisComponentStrategy {
+    + RedisComponentStrategy(cache:IDistributedCache, cacheKey:string)
+    + CacheKey : string <<get>>
+    + GetAsync() : Task<Component>
+    + RemoveAsync() : Task
+    + SetAsync(entity:Component) : Task
+}
+IComponentStrategy <|-- RedisComponentStrategy
+IRedisStrategy <|-- RedisComponentStrategy
+RedisComponentStrategy --> "Cache" IDistributedCache
+class MongoComponentStrategy {
+    + MongoComponentStrategy(mongoClient:IMongoClient, database:string, collection:string, visitorFactory:VisitorFactory)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + <<async>> GetAsync() : Task<Component>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:Component) : Task
+}
+IComponentStrategy <|-- MongoComponentStrategy
+IMongoStrategy <|-- MongoComponentStrategy
+MongoComponentStrategy --> "MongoClient" IMongoClient
+class RedisConfigConditStrategy {
+    + RedisConfigConditStrategy(cache:IDistributedCache, cacheKey:string)
+    + Key : string <<get>> <<set>>
+    + CacheKey : string <<get>>
+    + <<async>> GetAsync() : Task<ConfigCondition>
+    + <<async>> RemoveAsync() : Task
+    + <<async>> SetAsync(entity:ConfigCondition) : Task
+}
+class RedisConfigConditsStrategy {
+    + RedisConfigConditsStrategy(cache:IDistributedCache, cacheKey:string)
+    + CacheKey : string <<get>>
+    + GetAsync() : Task<List<ConfigCondition>>
+    + RemoveAsync() : Task
+    + SetAsync(entity:List<ConfigCondition>) : Task
+}
+IConfigConditStrategy <|-- RedisConfigConditStrategy
+IRedisStrategy <|-- RedisConfigConditStrategy
+RedisConfigConditStrategy --> "Cache" IDistributedCache
+IConfigConditsStrategy <|-- RedisConfigConditsStrategy
+IRedisStrategy <|-- RedisConfigConditsStrategy
+RedisConfigConditsStrategy --> "Cache" IDistributedCache
+class MongoConfigConditStrategy {
+    + MongoConfigConditStrategy(mongoClient:IMongoClient, database:string, collection:string)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + Key : string <<get>> <<set>>
+    + GetAsync() : Task<ConfigCondition>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:ConfigCondition) : Task
+}
+class MongoConfigConditsStrategy {
+    + MongoConfigConditsStrategy(mongoClient:IMongoClient, database:string, collection:string)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + GetAsync() : Task<List<ConfigCondition>>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:List<ConfigCondition>) : Task
+}
+IConfigConditStrategy <|-- MongoConfigConditStrategy
+IMongoStrategy <|-- MongoConfigConditStrategy
+MongoConfigConditStrategy --> "MongoClient" IMongoClient
+IConfigConditsStrategy <|-- MongoConfigConditsStrategy
+IMongoStrategy <|-- MongoConfigConditsStrategy
+MongoConfigConditsStrategy --> "MongoClient" IMongoClient
+enum Page {
+    Home,
+}
+class PrototypeExtensions <<static>> {
+    + {static} Clone(obj:T) : T
+}
+class ComponentExtensions <<static>> {
+    + {static} ClearComposite(component:Component) : Component
+    + {static} AddComposite(component:Component, subComponent:Component) : Component
+    + {static} GetTree(components:IEnumerable<Component>) : Component
+}
+class FakeExtensions <<static>> {
+    + {static} RandomName : string <<get>>
+    + {static} RandomBoolean : bool <<get>>
+    + {static} RandomNumber : int <<get>>
+    + {static} RandomPeek(enumable:IEnumerable<T>) : T
+    + {static} Fake(extension:MemberAdditional) : MemberAdditional
+    + {static} Fake(condition:DefinedCondition) : DefinedCondition
+    + {static} Fake(component:MemberComponent, conditions:Dictionary<string, DefinedCondition>, subNumber:int) : MemberComponent
+    + {static} Fake(component:MemberComponent, conditions:Dictionary<string, DefinedCondition>) : MemberComponent
+    + {static} Fake(component:LazyComponent, conditions:Dictionary<string, DefinedCondition>) : LazyComponent
+    + {static} Fake(component:Component, conditions:Dictionary<string, DefinedCondition>, subNumber:int) : Component
+    + {static} Fake(component:ConfigPageComponent) : ConfigPageComponent
+}
+class AddBsonKnowTypesAttribute {
+}
+Attribute <|-- AddBsonKnowTypesAttribute
+class VisitorFactory {
+    + VisitorFactory(serviceProvider:IServiceProvider)
+    + GetBuilder() : T
+    + GetVisitor() : T
+    Create() : T
+}
+ISimpleFactory <|-- VisitorFactory
+interface IFilter {
+    Filter(conditionField:IConditionField) : bool
+}
+interface IFilterDecorator {
+}
+IParams <|-- IFilter
+IFilter <|-- IFilterDecorator
+IFilterDecorator --> "InnerFilter" IFilter
+abstract class "VisitorBase`1"<T> {
+    + {abstract} Visit(element:T) : void
+    + <<virtual>> Visit(element:IElement) : void
+}
+class "IVisitor`1"<T> {
+}
+"IVisitor`1" "<T>" <|-- "VisitorBase`1"
+interface "IFlatVisitor`1"<T> {
+}
+class "IVisitor`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"IVisitor`1" "<T>" <|-- "IFlatVisitor`1"
+"IFlatVisitor`1" --> "FlatElements<Guid,T>" "Dictionary`2"
+interface "IFilterVisitor`1"<T> {
+}
+class "IVisitor`1"<T> {
+}
+"IVisitor`1" "<T>" <|-- "IFilterVisitor`1"
+"IFilterVisitor`1" --> "Filter" IFilter
+interface IVisitor {
+    Visit(element:IElement) : void
+}
+interface "IVisitor`1"<T> {
+    Visit(element:T) : void
+}
+IVisitor <|-- "IVisitor`1"
+interface "IHistoryStrategy`1"<T> {
+    PeekAsync() : Task<T>
+    PopAsync() : Task<T>
+    PushAsync(history:T) : Task
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<List<T>>" <|-- "IHistoryStrategy`1"
+interface IStrategy {
+}
+interface IMongoStrategy {
+    Database : string <<get>>
+    Collection : string <<get>>
+}
+interface IRedisStrategy {
+    CacheKey : string <<get>>
+}
+interface "IStrategy`1"<T> {
+    GetAsync() : Task<T>
+    SetAsync(entity:T) : Task
+    RemoveAsync() : Task
+}
+IStrategy <|-- IMongoStrategy
+IMongoStrategy --> "MongoClient" IMongoClient
+IStrategy <|-- IRedisStrategy
+IRedisStrategy --> "Cache" IDistributedCache
+IStrategy <|-- "IStrategy`1"
+interface IConfigConditStrategy {
+    Key : string <<get>> <<set>>
+}
+interface IConfigConditsStrategy {
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<ConfigCondition>" <|-- IConfigConditStrategy
+"IStrategy`1" "<List<ConfigCondition>>" <|-- IConfigConditsStrategy
+interface IComponentStrategy {
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<Component>" <|-- IComponentStrategy
+class AudioMedia {
+}
+Media <|-- AudioMedia
+class ImageMedia {
+}
+Media <|-- ImageMedia
+abstract class Media {
+    + Title : string <<get>> <<set>>
+    + Path : string <<get>> <<set>>
+}
+class VideoMedia {
+}
+Media <|-- VideoMedia
+class AppPageReaction {
+}
+Reaction <|-- AppPageReaction
+class InternalBrowserReaction {
+}
+Reaction <|-- InternalBrowserReaction
+abstract class Reaction {
+    + Path : string <<get>> <<set>>
+}
+class ExternalBrowserReaction {
+}
+Reaction <|-- ExternalBrowserReaction
+abstract class Operation {
+}
+class MoreOperation {
+}
+Operation <|-- MoreOperation
+class RecommendationStyle {
+}
+Style <|-- RecommendationStyle
+class BannerStyle {
+}
+Style <|-- BannerStyle
+abstract class Style {
+}
+abstract class PageComponent {
+    + Title : string <<get>> <<set>>
+    + SubTitle : string <<get>> <<set>>
+    + Version : string <<get>> <<set>>
+}
+CompositeComponent <|-- PageComponent
+class ConfigPageComponent {
+}
+PageComponent <|-- ConfigPageComponent
+class LazyComponent {
+    + HttpMethod : string <<get>> <<set>> = "Get"
+    + Path : string <<get>> <<set>>
+    + <<override>> Accept(visitor:IVisitor) : void
+}
+Component <|-- LazyComponent
+class MemberComponent {
+    + Title : string <<get>> <<set>>
+    + SubTitle : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+CompositeComponent <|-- MemberComponent
+MemberComponent --> "Style" Style
+MemberComponent --> "Additional" Additional
+MemberComponent --> "Reaction" Reaction
+MemberComponent o-> "Medias<Media>" "List`1"
+class UserPageComponent {
+}
+PageComponent <|-- UserPageComponent
+abstract class Component {
+    + Id : string <<get>> <<set>>
+    + UpperLayerComponentId : Guid? <<get>> <<set>> = null
+    + GetRoot() : Component
+    + IsRoot() : bool
+    + <<virtual>> Isolate() : void
+    + RemoveUpperLayer() : void
+    + SetUpperLayerComponent(component:Component) : void
+    + {abstract} Accept(visitor:IVisitor) : void
+}
+IElement <|-- Component
+Component o-> "ComponentId" Guid
+Component --> "Condition" Condition
+abstract class CompositeComponent {
+    + <<override>> Accept(visitor:IVisitor) : void
+    + <<override>> Isolate() : void
+    + <<virtual>> AddLowerLayer(component:Component) : void
+    + <<virtual>> ClearListOfSubComponents() : void
+    + <<virtual>> RemoveLowerLayer() : void
+    + <<virtual>> RemoveLowerLayer(component:Component) : void
+}
+class "List`1"<T> {
+}
+Component <|-- CompositeComponent
+CompositeComponent o-> "SubComponents<Component>" "List`1"
+class AdminPageComponent {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "List`1"<T> {
+}
+ConfigPageComponent <|-- AdminPageComponent
+AdminPageComponent o-> "Conditions<string,DefinedCondition>" "Dictionary`2"
+AdminPageComponent --> "Styles<Style>" "List`1"
+class DefConditionParams {
+}
+class "Dictionary`2"<T1,T2> {
+}
+IParams <|-- DefConditionParams
+DefConditionParams o-> "Conditions<string,DefinedCondition>" "Dictionary`2"
+class NullParams <<sealed>> {
+}
+IParams <|-- NullParams
+class StartDateTimeCondit {
+}
+IConditionField <|-- StartDateTimeCondit
+StartDateTimeCondit --> "DateTime" DateTime
+class City {
+    + Name : string <<get>> <<set>>
+}
+class "HashSet`1"<T> {
+}
+IConditionField <|-- City
+City o-> "Areas<Area>" "HashSet`1"
+class DefinedCondition {
+    + GetCommunities() : CommunityStructs
+    + GetLocations() : Locations
+    + <<override>> Pass(filter:IFilter) : bool
+}
+class "HashSet`1"<T> {
+}
+Condition <|-- DefinedCondition
+DefinedCondition o-> "Hide" Hide
+DefinedCondition --> "Start" StartDateTimeCondit
+DefinedCondition --> "End" EndDateTimeCondit
+DefinedCondition o-> "Communities<Community>" "HashSet`1"
+DefinedCondition o-> "Cities<City>" "HashSet`1"
+class ReferenceCondition {
+    + Ref : string <<get>> <<set>>
+    + <<override>> Pass(filter:IFilter) : bool
+}
+Condition <|-- ReferenceCondition
+class Area {
+    + Name : string <<get>> <<set>>
+}
+class "HashSet`1"<T> {
+}
+Area o-> "Villages<Village>" "HashSet`1"
+class Locations {
+}
+class Location <<struct>> {
+    + City : string <<get>> <<set>>
+    + Area : string <<get>> <<set>>
+    + Village : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+"List`1" "<Location>" <|-- Locations
+IConditionField <|-- Locations
+IConditionField <|-- Location
+abstract class Condition {
+    + {abstract} Pass(filter:IFilter) : bool
+}
+class Village {
+    + Name : string <<get>> <<set>>
+}
+class ConfigCondition {
+    + Id : string <<get>> <<set>>
+    + Key : string <<get>> <<set>>
+    + <<override>> Pass(filter:IFilter) : bool
+}
+Condition <|-- ConfigCondition
+ConfigCondition --> "Defined" DefinedCondition
+class CommunityStructs {
+}
+class Community {
+    + Id : string <<get>> <<set>>
+}
+class CommunityStruct <<struct>> {
+    + Id : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+"List`1" "<CommunityStruct>" <|-- CommunityStructs
+IConditionField <|-- CommunityStructs
+IConditionField <|-- Community
+IConditionField <|-- CommunityStruct
+class EndDateTimeCondit {
+}
+IConditionField <|-- EndDateTimeCondit
+EndDateTimeCondit --> "DateTime" DateTime
+class Hide {
+}
+IConditionField <|-- Hide
+abstract class History {
+}
+class HistoryEditor {
+    + Name : string <<get>> <<set>>
+}
+History --> "Editor" HistoryEditor
+History +-- HistoryEditor
+class ComponentHistory {
+}
+History <|-- ComponentHistory
+ComponentHistory --> "Component" Component
+class Number {
+    + Value : decimal <<get>> <<set>>
+}
+abstract class Additional {
+}
+class GoogleAnalytics {
+    + Value : string <<get>> <<set>>
+}
+class StartDateTime {
+}
+StartDateTime --> "DateTime" DateTime
+class Ad {
+}
+class Tag {
+    + Value : string <<get>> <<set>>
+}
+class MemberAdditional {
+}
+class "HashSet`1"<T> {
+}
+Additional <|-- MemberAdditional
+MemberAdditional --> "GA" GoogleAnalytics
+MemberAdditional --> "Point" Point
+MemberAdditional --> "Number" Number
+MemberAdditional o-> "Tags<Tag>" "HashSet`1"
+MemberAdditional --> "Ad" Ad
+MemberAdditional --> "Start" StartDateTime
+MemberAdditional --> "End" EndDateTime
+class Point {
+}
+class EndDateTime {
+}
+EndDateTime --> "DateTime" DateTime
+interface IVisitorBuilder {
+}
+interface "IVisitorBuilder`2"<T,P> {
+    Params : P <<get>>
+    SetParams(@params:P) : IVisitorBuilder<T, P>
+}
+abstract class "VisitorBuilder`2"<T,P> {
+    + <<virtual>> Params : P <<get>> <<protected set>>
+    + <<virtual>> Build() : T
+    + <<virtual>> SetParams(@params:P) : IVisitorBuilder<T, P>
+    Build() : object
+}
+class "IBuilder`1"<T> {
+}
+IBuilder <|-- IVisitorBuilder
+IVisitorBuilder <|-- "IVisitorBuilder`2"
+"IBuilder`1" "<T>" <|-- "IVisitorBuilder`2"
+"IVisitorBuilder`2" --> "ProductType" Type
+"IVisitorBuilder`2" "<T,P>" <|-- "VisitorBuilder`2"
+"VisitorBuilder`2" --> "ProductType" Type
+interface ISimpleFactory {
+    Create() : T
+}
+interface "IPrototype`1"<T> {
+    Clone() : T
+}
+interface IBuilder {
+    Build() : object
+}
+interface "IBuilder`1"<T> {
+    <<new>> Build() : T
+}
+IBuilder <|-- "IBuilder`1"
+interface "ICommandWithResult`1"<T> {
+    Result : T <<get>>
+    ExecuteAsync() : Task<T>
+}
+ICommand <|-- "ICommandWithResult`1"
+interface ICommand {
+    ExecuteAsync() : Task
+}
+ICommand --> "Receiver" IReceiver
+interface IReceiver {
+}
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+interface IFilter {
+    Filter(conditionField:IConditionField) : bool
+}
+interface IFilterDecorator {
+}
+IParams <|-- IFilter
+IFilter <|-- IFilterDecorator
+IFilterDecorator --> "InnerFilter" IFilter
+@enduml

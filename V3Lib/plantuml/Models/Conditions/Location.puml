@@ -1,0 +1,14 @@
+@startuml
+class Locations {
+}
+class Location <<struct>> {
+    + City : string <<get>> <<set>>
+    + Area : string <<get>> <<set>>
+    + Village : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+"List`1" "<Location>" <|-- Locations
+IConditionField <|-- Locations
+IConditionField <|-- Location
+@enduml

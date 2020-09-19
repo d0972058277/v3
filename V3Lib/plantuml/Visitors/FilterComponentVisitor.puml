@@ -1,0 +1,26 @@
+@startuml
+class FilterComponentVisitor {
+    + FilterComponentVisitor(filter:IFilter)
+    + <<override>> Visit(element:Component) : void
+}
+class FilterComponentVisitorBuilder {
+    + FilterComponentVisitorBuilder()
+}
+class FilterComponentVisitorBuilderExtensions <<static>> {
+    + {static} SetHideFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetStartDateTimeFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetEndDateTimeFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetCommunityFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>, communities:List<CommunityStruct>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+    + {static} SetLocationFilter(builder:IVisitorBuilder<FilterComponentVisitor, IFilter>, locations:List<Location>) : IVisitorBuilder<FilterComponentVisitor, IFilter>
+}
+class "VisitorBase`1"<T> {
+}
+class "IFilterVisitor`1"<T> {
+}
+class "VisitorBuilder`2"<T1,T2> {
+}
+"VisitorBase`1" "<Component>" <|-- FilterComponentVisitor
+"IFilterVisitor`1" "<Component>" <|-- FilterComponentVisitor
+FilterComponentVisitor --> "Filter" IFilter
+"VisitorBuilder`2" "<FilterComponentVisitor,IFilter>" <|-- FilterComponentVisitorBuilder
+@enduml

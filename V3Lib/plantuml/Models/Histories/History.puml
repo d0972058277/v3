@@ -1,0 +1,9 @@
+@startuml
+abstract class History {
+}
+class HistoryEditor {
+    + Name : string <<get>> <<set>>
+}
+History --> "Editor" HistoryEditor
+History +-- HistoryEditor
+@enduml

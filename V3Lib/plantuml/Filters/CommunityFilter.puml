@@ -1,0 +1,12 @@
+@startuml
+class CommunityFilter {
+    + CommunityFilter(innerFilter:IFilter, communityStructs:List<CommunityStruct>)
+    + Filter(conditionField:IConditionField) : bool
+}
+class "List`1"<T> {
+}
+IFilter <|-- CommunityFilter
+IFilterDecorator <|-- CommunityFilter
+CommunityFilter --> "InnerFilter" IFilter
+CommunityFilter --> "CommunityStructs<CommunityStruct>" "List`1"
+@enduml

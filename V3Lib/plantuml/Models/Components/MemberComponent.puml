@@ -1,0 +1,14 @@
+@startuml
+class MemberComponent {
+    + Title : string <<get>> <<set>>
+    + SubTitle : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+CompositeComponent <|-- MemberComponent
+MemberComponent --> "Style" Style
+MemberComponent --> "Additional" Additional
+MemberComponent --> "Reaction" Reaction
+MemberComponent o-> "Medias<Media>" "List`1"
+@enduml

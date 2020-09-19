@@ -1,0 +1,5 @@
+@startuml
+class AppPageReaction {
+}
+Reaction <|-- AppPageReaction
+@enduml

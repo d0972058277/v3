@@ -1,0 +1,7 @@
+@startuml
+class ReferenceCondition {
+    + Ref : string <<get>> <<set>>
+    + <<override>> Pass(filter:IFilter) : bool
+}
+Condition <|-- ReferenceCondition
+@enduml

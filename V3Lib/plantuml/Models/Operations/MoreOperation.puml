@@ -1,0 +1,5 @@
+@startuml
+class MoreOperation {
+}
+Operation <|-- MoreOperation
+@enduml

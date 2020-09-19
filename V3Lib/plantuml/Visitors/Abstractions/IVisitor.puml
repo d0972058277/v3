@@ -1,0 +1,9 @@
+@startuml
+interface IVisitor {
+    Visit(element:IElement) : void
+}
+interface "IVisitor`1"<T> {
+    Visit(element:T) : void
+}
+IVisitor <|-- "IVisitor`1"
+@enduml

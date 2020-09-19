@@ -1,0 +1,5 @@
+@startuml
+class EndDateTime {
+}
+EndDateTime --> "DateTime" DateTime
+@enduml

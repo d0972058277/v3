@@ -1,0 +1,10 @@
+@startuml
+interface "IFlatVisitor`1"<T> {
+}
+class "IVisitor`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"IVisitor`1" "<T>" <|-- "IFlatVisitor`1"
+"IFlatVisitor`1" --> "FlatElements<Guid,T>" "Dictionary`2"
+@enduml

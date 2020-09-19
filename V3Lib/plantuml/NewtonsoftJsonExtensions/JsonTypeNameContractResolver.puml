@@ -1,0 +1,8 @@
+@startuml
+class JsonTypeNameContractResolver {
+    {static} JsonTypeNameContractResolver()
+}
+DefaultContractResolver <|-- JsonTypeNameContractResolver
+JsonTypeNameContractResolver --> "instance" JsonTypeNameContractResolver
+JsonTypeNameContractResolver --> "Instance" JsonTypeNameContractResolver
+@enduml

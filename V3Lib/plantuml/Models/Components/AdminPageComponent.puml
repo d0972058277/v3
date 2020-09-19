@@ -1,0 +1,11 @@
+@startuml
+class AdminPageComponent {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "List`1"<T> {
+}
+ConfigPageComponent <|-- AdminPageComponent
+AdminPageComponent o-> "Conditions<string,DefinedCondition>" "Dictionary`2"
+AdminPageComponent --> "Styles<Style>" "List`1"
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+interface IVisitorBuilder {
+}
+interface "IVisitorBuilder`2"<T,P> {
+    Params : P <<get>>
+    SetParams(@params:P) : IVisitorBuilder<T, P>
+}
+abstract class "VisitorBuilder`2"<T,P> {
+    + <<virtual>> Params : P <<get>> <<protected set>>
+    + <<virtual>> Build() : T
+    + <<virtual>> SetParams(@params:P) : IVisitorBuilder<T, P>
+    Build() : object
+}
+class "IBuilder`1"<T> {
+}
+IBuilder <|-- IVisitorBuilder
+IVisitorBuilder <|-- "IVisitorBuilder`2"
+"IBuilder`1" "<T>" <|-- "IVisitorBuilder`2"
+"IVisitorBuilder`2" --> "ProductType" Type
+"IVisitorBuilder`2" "<T,P>" <|-- "VisitorBuilder`2"
+"VisitorBuilder`2" --> "ProductType" Type
+@enduml

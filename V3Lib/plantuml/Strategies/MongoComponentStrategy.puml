@@ -1,0 +1,13 @@
+@startuml
+class MongoComponentStrategy {
+    + MongoComponentStrategy(mongoClient:IMongoClient, database:string, collection:string, visitorFactory:VisitorFactory)
+    + Database : string <<get>>
+    + Collection : string <<get>>
+    + <<async>> GetAsync() : Task<Component>
+    + RemoveAsync() : Task
+    + <<async>> SetAsync(entity:Component) : Task
+}
+IComponentStrategy <|-- MongoComponentStrategy
+IMongoStrategy <|-- MongoComponentStrategy
+MongoComponentStrategy --> "MongoClient" IMongoClient
+@enduml

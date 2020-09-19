@@ -1,0 +1,12 @@
+@startuml
+class RedisComponentStrategy {
+    + RedisComponentStrategy(cache:IDistributedCache, cacheKey:string)
+    + CacheKey : string <<get>>
+    + GetAsync() : Task<Component>
+    + RemoveAsync() : Task
+    + SetAsync(entity:Component) : Task
+}
+IComponentStrategy <|-- RedisComponentStrategy
+IRedisStrategy <|-- RedisComponentStrategy
+RedisComponentStrategy --> "Cache" IDistributedCache
+@enduml

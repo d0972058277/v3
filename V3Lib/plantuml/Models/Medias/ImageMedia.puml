@@ -1,0 +1,5 @@
+@startuml
+class ImageMedia {
+}
+Media <|-- ImageMedia
+@enduml

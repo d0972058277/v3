@@ -1,0 +1,10 @@
+@startuml
+interface "IHistoryStrategy`1"<T> {
+    PeekAsync() : Task<T>
+    PopAsync() : Task<T>
+    PushAsync(history:T) : Task
+}
+class "IStrategy`1"<T> {
+}
+"IStrategy`1" "<List<T>>" <|-- "IHistoryStrategy`1"
+@enduml

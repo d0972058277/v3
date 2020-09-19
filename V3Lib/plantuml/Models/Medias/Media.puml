@@ -1,0 +1,6 @@
+@startuml
+abstract class Media {
+    + Title : string <<get>> <<set>>
+    + Path : string <<get>> <<set>>
+}
+@enduml

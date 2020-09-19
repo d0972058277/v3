@@ -1,0 +1,5 @@
+@startuml
+abstract class Condition {
+    + {abstract} Pass(filter:IFilter) : bool
+}
+@enduml

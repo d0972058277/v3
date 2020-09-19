@@ -1,0 +1,5 @@
+@startuml
+class Tag {
+    + Value : string <<get>> <<set>>
+}
+@enduml

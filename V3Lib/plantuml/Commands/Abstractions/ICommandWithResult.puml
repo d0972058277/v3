@@ -1,0 +1,7 @@
+@startuml
+interface "ICommandWithResult`1"<T> {
+    Result : T <<get>>
+    ExecuteAsync() : Task<T>
+}
+ICommand <|-- "ICommandWithResult`1"
+@enduml

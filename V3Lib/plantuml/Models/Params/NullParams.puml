@@ -1,0 +1,5 @@
+@startuml
+class NullParams <<sealed>> {
+}
+IParams <|-- NullParams
+@enduml

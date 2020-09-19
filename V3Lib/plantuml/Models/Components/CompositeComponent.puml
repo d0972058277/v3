@@ -1,0 +1,14 @@
+@startuml
+abstract class CompositeComponent {
+    + <<override>> Accept(visitor:IVisitor) : void
+    + <<override>> Isolate() : void
+    + <<virtual>> AddLowerLayer(component:Component) : void
+    + <<virtual>> ClearListOfSubComponents() : void
+    + <<virtual>> RemoveLowerLayer() : void
+    + <<virtual>> RemoveLowerLayer(component:Component) : void
+}
+class "List`1"<T> {
+}
+Component <|-- CompositeComponent
+CompositeComponent o-> "SubComponents<Component>" "List`1"
+@enduml

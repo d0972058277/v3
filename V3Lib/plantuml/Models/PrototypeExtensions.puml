@@ -1,0 +1,5 @@
+@startuml
+class PrototypeExtensions <<static>> {
+    + {static} Clone(obj:T) : T
+}
+@enduml

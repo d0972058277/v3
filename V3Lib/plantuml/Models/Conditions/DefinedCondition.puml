@@ -1,0 +1,15 @@
+@startuml
+class DefinedCondition {
+    + GetCommunities() : CommunityStructs
+    + GetLocations() : Locations
+    + <<override>> Pass(filter:IFilter) : bool
+}
+class "HashSet`1"<T> {
+}
+Condition <|-- DefinedCondition
+DefinedCondition o-> "Hide" Hide
+DefinedCondition --> "Start" StartDateTimeCondit
+DefinedCondition --> "End" EndDateTimeCondit
+DefinedCondition o-> "Communities<Community>" "HashSet`1"
+DefinedCondition o-> "Cities<City>" "HashSet`1"
+@enduml

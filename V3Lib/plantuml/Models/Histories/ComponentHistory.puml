@@ -1,0 +1,6 @@
+@startuml
+class ComponentHistory {
+}
+History <|-- ComponentHistory
+ComponentHistory --> "Component" Component
+@enduml

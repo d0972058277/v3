@@ -1,0 +1,5 @@
+@startuml
+class GoogleAnalytics {
+    + Value : string <<get>> <<set>>
+}
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+interface IBuilder {
+    Build() : object
+}
+interface "IBuilder`1"<T> {
+    <<new>> Build() : T
+}
+IBuilder <|-- "IBuilder`1"
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+class LazyComponent {
+    + HttpMethod : string <<get>> <<set>> = "Get"
+    + Path : string <<get>> <<set>>
+    + <<override>> Accept(visitor:IVisitor) : void
+}
+Component <|-- LazyComponent
+@enduml
