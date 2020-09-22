@@ -14,13 +14,25 @@ namespace V3Lib.Models.Components
         public override void Accept(IVisitor visitor)
         {
             visitor.Visit(this);
-            SubComponents.ForEach(component => visitor.Visit(component));
+            SubComponents.ToList().ForEach(component => visitor.Visit(component));
         }
 
         public override void Isolate()
         {
             base.Isolate();
-            RemoveLowerLayer();
+            ClearListOfSubComponents();
+        }
+
+        protected override void RemoveLowerLayerComponent(Component component)
+        {
+            if (SubComponents.Contains(component))
+            {
+                SubComponents.Remove(component);
+            }
+            else
+            {
+                throw new InvalidOperationException("SubComponents.Contains(component) is false.");
+            }
         }
 
         public virtual void AddLowerLayer(Component component)
@@ -32,25 +44,6 @@ namespace V3Lib.Models.Components
         public virtual void ClearListOfSubComponents()
         {
             SubComponents.Clear();
-        }
-
-        public virtual void RemoveLowerLayer()
-        {
-            SubComponents.ToList().ForEach(component => RemoveLowerLayer(component));
-            ClearListOfSubComponents();
-        }
-
-        public virtual void RemoveLowerLayer(Component component)
-        {
-            if (SubComponents.Contains(component))
-            {
-                component.RemoveUpperLayer();
-                SubComponents.Remove(component);
-            }
-            else
-            {
-                throw new InvalidOperationException("SubComponents.Contains(component) is false.");
-            }
         }
     }
 }

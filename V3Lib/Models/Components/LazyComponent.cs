@@ -13,5 +13,7 @@ namespace V3Lib.Models.Components
         public string Path { get; set; }
 
         public override void Accept(IVisitor visitor) => visitor.Visit(this);
+
+        protected override void RemoveLowerLayerComponent(Component component) { }
     }
 }

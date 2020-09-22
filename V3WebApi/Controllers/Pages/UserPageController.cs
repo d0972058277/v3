@@ -15,9 +15,21 @@ namespace V3WebApi.Controllers.Pages
         [HttpGet("User/Home")]
         public async Task<ActionResult<UserPageComponent>> GetUserPageHome()
         {
-            var page = new UserPageComponent();
+            var configComponent = await _componentStrategy.GetAsync();
+            var conditions = await _configConditsStrategy.GetAsync();
 
-            return Ok(page);
+            var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeRef2DefConditionVisitorBuilder>().SetDefinedConditions(conditions).Build();
+            configComponent.Accept(exchangeVisitor);
+
+            var filterVisitor = _visitorFactory.GetBuilder<FilterComponentVisitorBuilder>().SetHideFilter().SetStartDateTimeFilter().SetEndDateTimeFilter().Build();
+            configComponent.Accept(filterVisitor);
+
+            var removeConditVisitor = _visitorFactory.GetBuilder<RemoveConditionVisitorBuilder>().Build();
+            configComponent.Accept(removeConditVisitor);
+
+            var result = _mapper.Map<UserPageComponent>(configComponent);
+
+            return Ok(result);
         }
     }
 }

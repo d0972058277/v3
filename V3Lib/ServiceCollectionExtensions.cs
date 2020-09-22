@@ -40,6 +40,8 @@ namespace V3Lib
                 {
                     // ConfigPageComponent <-> AdminPageComponent
                     cfg.CreateMap<ConfigPageComponent, AdminPageComponent>();
+                    // ConfigPageComponent <-> UserPageComponent
+                    cfg.CreateMap<ConfigPageComponent, UserPageComponent>();
                 });
 
                 return mapperConfiguration.CreateMapper();

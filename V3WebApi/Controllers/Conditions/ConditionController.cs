@@ -60,10 +60,11 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Defined/{key}")]
-        public async Task<ActionResult<ConfigCondition>> GetDefined([FromRoute] string key)
+        public async Task<ActionResult<DefinedCondition>> GetDefined([FromRoute] string key)
         {
             _configConditStrategy.Key = key;
-            var result = await _configConditStrategy.GetAsync();
+            var condigCondition = await _configConditStrategy.GetAsync();
+            var result = condigCondition.Defined;
             return Ok(result);
         }
 
@@ -87,7 +88,7 @@ namespace V3WebApi.Controllers.Conditions
 
         [MapToApiVersion("3.0-patch0")]
         [HttpDelete("Defined/{key}")]
-        public async Task<ActionResult<Dictionary<string, DefinedCondition>>> DeleteDefined([FromRoute] string key)
+        public async Task<ActionResult> DeleteDefined([FromRoute] string key)
         {
             _configConditStrategy.Key = key;
             await _configConditStrategy.RemoveAsync();

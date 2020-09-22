@@ -17,7 +17,7 @@ namespace V3Lib.Visitors
 
         public override void Visit(Component element)
         {
-            if (!element.Condition.Pass(Filter))
+            if (element.Condition != null && !element.Condition.Pass(Filter))
             {
                 element.Isolate();
             }

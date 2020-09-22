@@ -51,10 +51,11 @@ namespace V3Lib.Models.Components
 
         public virtual void Isolate()
         {
-            SetUpperLayerComponent(null);
+            _upperLayerComponent.RemoveLowerLayerComponent(this);
+            RemoveUpperLayerComponent();
         }
 
-        public void RemoveUpperLayer()
+        public void RemoveUpperLayerComponent()
         {
             SetUpperLayerComponent(null);
         }
@@ -66,5 +67,6 @@ namespace V3Lib.Models.Components
         }
 
         public abstract void Accept(IVisitor visitor);
+        protected abstract void RemoveLowerLayerComponent(Component component);
     }
 }

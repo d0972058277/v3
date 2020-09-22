@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using V3Lib.Creationals.Abstractions;
 using V3Lib.Models;
 using V3Lib.Models.Components;
@@ -40,6 +41,13 @@ namespace V3Lib.Visitors
         public static IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams> SetDefinedConditions(this IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams> builder, Dictionary<string, DefinedCondition> conditions)
         {
             builder.SetParams(new DefConditionParams { Conditions = conditions });
+            return builder;
+        }
+
+        public static IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams> SetDefinedConditions(this IVisitorBuilder<ExchangeRef2DefConditionVisitor, DefConditionParams> builder, IEnumerable<ConfigCondition> conditions)
+        {
+            var defineds = conditions.ToDictionary(c => c.Key, c => c.Defined);
+            builder.SetDefinedConditions(defineds);
             return builder;
         }
     }
