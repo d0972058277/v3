@@ -3,44 +3,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using V3Lib.Models.Conditions;
+using V3Lib.Models.Params;
 using V3Lib.Strategies.Abstractions;
 
 namespace V3Lib.Strategies
 {
-    public class RedisConfigConditStrategy : IConfigConditStrategy, IRedisStrategy
+    public class RedisConfigConditStrategy : IConfigConditStrategy<RedisStrategyParams>, IRedisStrategy
     {
-        public RedisConfigConditStrategy(IDistributedCache cache, string cacheKey)
+        public RedisConfigConditStrategy(IDistributedCache cache, RedisConfigConditsStrategy configConditsStrategy)
         {
             Cache = cache;
-            CacheKey = cacheKey;
-            _configConditsStrategy = new RedisConfigConditsStrategy(cache, cacheKey);
+            _configConditsStrategy = configConditsStrategy;
         }
-
-        public string Key { get; set; }
 
         public IDistributedCache Cache { get; }
 
-        public string CacheKey { get; }
+        protected RedisConfigConditsStrategy _configConditsStrategy;
 
-        protected IConfigConditsStrategy _configConditsStrategy;
-
-        public async Task<ConfigCondition> GetAsync()
+        public async Task<ConfigCondition> GetAsync(RedisStrategyParams strategyParams)
         {
-            var condits = await _configConditsStrategy.GetAsync();
-            return condits.Where(c => c.Key == Key).Single();
+            var condits = await _configConditsStrategy.GetAsync(strategyParams);
+            return condits.Where(c => c.Key == strategyParams.TargetKey).Single();
         }
 
-        public async Task RemoveAsync()
+        public async Task SetAsync(RedisStrategyParams strategyParams, ConfigCondition entity)
         {
-            var condits = await _configConditsStrategy.GetAsync();
-            var condit = condits.Where(c => c.Key == Key).Single();
-            condits.Remove(condit);
-            await _configConditsStrategy.SetAsync(condits);
-        }
-
-        public async Task SetAsync(ConfigCondition entity)
-        {
-            var condits = await _configConditsStrategy.GetAsync();
+            var condits = await _configConditsStrategy.GetAsync(strategyParams);
             var condit = condits.Where(c => c.Key == entity.Key).SingleOrDefault();
             if (condit is null)
             {
@@ -50,35 +38,40 @@ namespace V3Lib.Strategies
             {
                 condit.Defined = entity.Defined;
             }
-            await _configConditsStrategy.SetAsync(condits);
+            await _configConditsStrategy.SetAsync(strategyParams, condits);
+        }
+
+        public async Task RemoveAsync(RedisStrategyParams strategyParams)
+        {
+            var condits = await _configConditsStrategy.GetAsync(strategyParams);
+            var condit = condits.Where(c => c.Key == strategyParams.TargetKey).Single();
+            condits.Remove(condit);
+            await _configConditsStrategy.SetAsync(strategyParams, condits);
         }
     }
 
-    public class RedisConfigConditsStrategy : IConfigConditsStrategy, IRedisStrategy
+    public class RedisConfigConditsStrategy : IConfigConditsStrategy<RedisStrategyParams>, IRedisStrategy
     {
-        public RedisConfigConditsStrategy(IDistributedCache cache, string cacheKey)
+        public RedisConfigConditsStrategy(IDistributedCache cache)
         {
             Cache = cache;
-            CacheKey = cacheKey;
         }
 
         public IDistributedCache Cache { get; }
 
-        public string CacheKey { get; }
-
-        public Task<List<ConfigCondition>> GetAsync()
+        public Task<List<ConfigCondition>> GetAsync(RedisStrategyParams strategyParams)
         {
-            return Cache.GetObjectAsync<List<ConfigCondition>>(CacheKey);
+            return Cache.GetObjectAsync<List<ConfigCondition>>(strategyParams.Cachekey);
         }
 
-        public Task RemoveAsync()
+        public Task RemoveAsync(RedisStrategyParams strategyParams)
         {
-            return Cache.RemoveAsync(CacheKey);
+            return Cache.RemoveAsync(strategyParams.Cachekey);
         }
 
-        public Task SetAsync(List<ConfigCondition> entity)
+        public Task SetAsync(RedisStrategyParams strategyParams, List<ConfigCondition> entity)
         {
-            return Cache.SetObjectAsync<List<ConfigCondition>>(CacheKey, entity);
+            return Cache.SetObjectAsync<List<ConfigCondition>>(strategyParams.Cachekey, entity);
         }
     }
 }

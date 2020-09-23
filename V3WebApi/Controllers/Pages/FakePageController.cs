@@ -18,7 +18,7 @@ namespace V3WebApi.Controllers.Pages
         {
             var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
-            var defineds = await _mongoClient.GetDatabase("Condition").GetCollection<ConfigCondition>("Defined").Find(filter).ToListAsync();
+            var defineds = await _configConditsStrategy.GetAsync(_conditionDefined);
             var conditions = defineds.ToDictionary(d => d.Key, d => d.Defined);
 
             var page = new ConfigPageComponent().Fake();

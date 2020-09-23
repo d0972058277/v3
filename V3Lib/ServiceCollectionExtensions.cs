@@ -7,6 +7,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using V3Lib.Creationals;
 using V3Lib.Creationals.Abstractions;
 using V3Lib.Models.Components;
+using V3Lib.Strategies.Abstractions;
 
 namespace V3Lib
 {
@@ -19,6 +20,8 @@ namespace V3Lib
             services.AddAutoMapper();
 
             services.AddVisitorFactory();
+
+            services.AddStrategy();
 
             return services;
         }
@@ -67,6 +70,24 @@ namespace V3Lib
             }
 
             services.AddTransient<VisitorFactory>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddStrategy(this IServiceCollection services)
+        {
+            var types = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(assembly => assembly.DefinedTypes
+                    .Where(type => type
+                        .GetInterfaces()
+                        .Contains(typeof(IStrategy)) && !type.IsInterface && !type.IsAbstract))
+                .ToList();
+
+            foreach (var type in types)
+            {
+                services.Add(new ServiceDescriptor(type, type, ServiceLifetime.Transient));
+            }
 
             return services;
         }

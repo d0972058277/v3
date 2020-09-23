@@ -2,81 +2,82 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using V3Lib.Models.Conditions;
+using V3Lib.Models.Params;
 using V3Lib.Strategies.Abstractions;
 
 namespace V3Lib.Strategies
 {
-    public class MongoConfigConditStrategy : IConfigConditStrategy, IMongoStrategy
+    public class MongoConfigConditStrategy : IConfigConditStrategy<MongoStrategyParams>, IMongoStrategy
     {
-        public MongoConfigConditStrategy(IMongoClient mongoClient, string database, string collection)
+        public MongoConfigConditStrategy(IMongoClient mongoClient)
         {
             MongoClient = mongoClient;
-            Database = database;
-            Collection = collection;
         }
 
         public IMongoClient MongoClient { get; }
 
-        public string Database { get; }
-
-        public string Collection { get; }
-
-        public string Key { get; set; }
-
-        public Task<ConfigCondition> GetAsync()
+        public Task<ConfigCondition> GetAsync(MongoStrategyParams strategyParams)
         {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            var key = strategyParams.TargetKey;
             var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Eq(c => c.Key, Key);
-            return MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).Find(filter).SingleAsync();
+            var filter = builder.Eq(c => c.Key, key);
+            return MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).Find(filter).SingleAsync();
         }
 
-        public Task RemoveAsync()
+        public Task RemoveAsync(MongoStrategyParams strategyParams)
         {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            var key = strategyParams.TargetKey;
             var builder = Builders<ConfigCondition>.Filter;
-            var filter = builder.Eq(c => c.Key, Key);
-            return MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).DeleteOneAsync(filter);
+            var filter = builder.Eq(c => c.Key, key);
+            return MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).DeleteOneAsync(filter);
         }
 
-        public async Task SetAsync(ConfigCondition entity)
+        public async Task SetAsync(MongoStrategyParams strategyParams, ConfigCondition entity)
         {
-            await RemoveAsync();
-            await MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).InsertOneAsync(entity);
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            await RemoveAsync(strategyParams);
+            await MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).InsertOneAsync(entity);
         }
     }
 
-    public class MongoConfigConditsStrategy : IConfigConditsStrategy, IMongoStrategy
+    public class MongoConfigConditsStrategy : IConfigConditsStrategy<MongoStrategyParams>, IMongoStrategy
     {
-        public MongoConfigConditsStrategy(IMongoClient mongoClient, string database, string collection)
+        public MongoConfigConditsStrategy(IMongoClient mongoClient)
         {
             MongoClient = mongoClient;
-            Database = database;
-            Collection = collection;
         }
 
         public IMongoClient MongoClient { get; }
 
-        public string Database { get; }
-
-        public string Collection { get; }
-
-        public Task<List<ConfigCondition>> GetAsync()
+        public Task<List<ConfigCondition>> GetAsync(MongoStrategyParams strategyParams)
         {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
             var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
-            return MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).Find(filter).ToListAsync();
+            return MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).Find(filter).ToListAsync();
         }
 
-        public Task RemoveAsync()
+        public Task RemoveAsync(MongoStrategyParams strategyParams)
         {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
             var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
-            return MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).DeleteManyAsync(filter);
+            return MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).DeleteManyAsync(filter);
         }
 
-        public async Task SetAsync(List<ConfigCondition> entity)
+        public async Task SetAsync(MongoStrategyParams strategyParams, List<ConfigCondition> entity)
         {
-            await RemoveAsync();
-            await MongoClient.GetDatabase(Database).GetCollection<ConfigCondition>(Collection).InsertManyAsync(entity);
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            await RemoveAsync(strategyParams);
+            await MongoClient.GetDatabase(database).GetCollection<ConfigCondition>(collection).InsertManyAsync(entity);
         }
     }
 }

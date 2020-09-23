@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Driver;
 using V3Lib.Models.Components;
+using V3Lib.Models.Params;
 
 namespace V3Lib.Strategies.Abstractions
 {
@@ -10,20 +11,17 @@ namespace V3Lib.Strategies.Abstractions
     public interface IMongoStrategy : IStrategy
     {
         IMongoClient MongoClient { get; }
-        string Database { get; }
-        string Collection { get; }
     }
 
     public interface IRedisStrategy : IStrategy
     {
         IDistributedCache Cache { get; }
-        string CacheKey { get; }
     }
 
-    public interface IStrategy<T> : IStrategy
+    public interface IStrategy<T, E> : IStrategy where T : IStrategyParams
     {
-        Task<T> GetAsync();
-        Task SetAsync(T entity);
-        Task RemoveAsync();
+        Task<E> GetAsync(T strategyParams);
+        Task SetAsync(T strategyParams, E entity);
+        Task RemoveAsync(T strategyParams);
     }
 }

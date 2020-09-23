@@ -4,53 +4,56 @@ using MongoDB.Driver;
 using V3Lib.Creationals;
 using V3Lib.Models;
 using V3Lib.Models.Components;
+using V3Lib.Models.Params;
 using V3Lib.Strategies.Abstractions;
 using V3Lib.Visitors;
 
 namespace V3Lib.Strategies
 {
-    public class MongoComponentStrategy : IComponentStrategy, IMongoStrategy
+    public class MongoComponentStrategy : IComponentStrategy<MongoStrategyParams>, IMongoStrategy
     {
-        public MongoComponentStrategy(IMongoClient mongoClient, string database, string collection, VisitorFactory visitorFactory)
+        public MongoComponentStrategy(IMongoClient mongoClient, VisitorFactory visitorFactory)
         {
             MongoClient = mongoClient;
-            Database = database;
-            Collection = collection;
             _visitorFactory = visitorFactory;
         }
 
         public IMongoClient MongoClient { get; }
 
-        public string Database { get; }
-
-        public string Collection { get; }
-
         protected VisitorFactory _visitorFactory;
 
-        public async Task<Component> GetAsync()
+        public async Task<Component> GetAsync(MongoStrategyParams strategyParams)
         {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
             var builder = Builders<Component>.Filter;
             var filter = builder.Empty;
-            var components = await MongoClient.GetDatabase(Database).GetCollection<Component>(Collection).Find(filter).ToListAsync();
+            var components = await MongoClient.GetDatabase(database).GetCollection<Component>(collection).Find(filter).ToListAsync();
             var component = components.GetTree();
             return component;
         }
 
-        public Task RemoveAsync()
+        public async Task SetAsync(MongoStrategyParams strategyParams, Component entity)
         {
-            var builder = Builders<Component>.Filter;
-            var filter = builder.Empty;
-            return MongoClient.GetDatabase(Database).GetCollection<Component>(Collection).DeleteManyAsync(filter);
-        }
+            await RemoveAsync(strategyParams);
 
-        public async Task SetAsync(Component entity)
-        {
-            await RemoveAsync();
             var flatVisitor = _visitorFactory.GetVisitor<FlatComponentVisitor>();
             entity.Accept(flatVisitor);
             var flatComponents = flatVisitor.FlatElements.Values.ToList();
             flatComponents.ForEach(flatComponent => flatComponent.ClearComposite());
-            await MongoClient.GetDatabase(Database).GetCollection<Component>(Collection).InsertManyAsync(flatComponents);
+
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            await MongoClient.GetDatabase(database).GetCollection<Component>(collection).InsertManyAsync(flatComponents);
+        }
+
+        public Task RemoveAsync(MongoStrategyParams strategyParams)
+        {
+            var database = strategyParams.Database;
+            var collection = strategyParams.Collection;
+            var builder = Builders<Component>.Filter;
+            var filter = builder.Empty;
+            return MongoClient.GetDatabase(database).GetCollection<Component>(collection).DeleteManyAsync(filter);
         }
     }
 }

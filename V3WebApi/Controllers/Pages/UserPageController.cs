@@ -15,8 +15,14 @@ namespace V3WebApi.Controllers.Pages
         [HttpGet("User/Home")]
         public async Task<ActionResult<UserPageComponent>> GetUserPageHome()
         {
-            var configComponent = await _componentStrategy.GetAsync();
-            var conditions = await _configConditsStrategy.GetAsync();
+            var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
+
+            if (configComponent is null) return Ok(null);
+
+            var conditions = await _configConditsStrategy.GetAsync(_conditionDefined);
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkRelationVisitorBuilder>().Build();
+            configComponent.Accept(linkVisitor);
 
             var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeRef2DefConditionVisitorBuilder>().SetDefinedConditions(conditions).Build();
             configComponent.Accept(exchangeVisitor);
