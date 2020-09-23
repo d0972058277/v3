@@ -14,11 +14,11 @@ using V3Lib.Visitors;
 
 namespace V3WebApi.Controllers.Pages
 {
-    public partial class PageController : ControllerBase
+    public partial class HomeController : ControllerBase
     {
         [MapToApiVersion("3.0-patch0")]
-        [HttpGet("Admin/Home")]
-        public async Task<ActionResult<Component>> GetAdminPageHome()
+        [HttpGet("Admin")]
+        public async Task<ActionResult<Component>> GetHomeAdmin()
         {
             var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
             var conditions = await _configConditsStrategy.GetAsync(_conditionDefined);
@@ -31,24 +31,24 @@ namespace V3WebApi.Controllers.Pages
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpPost("Admin/Home")]
-        public async Task<ActionResult> PostAdminPageHome([FromBody] ConfigPageComponent home)
+        [HttpPost("Admin")]
+        public async Task<ActionResult> PostHomeAdmin([FromBody] ConfigPageComponent home)
         {
             await _mongoComponentStrategy.SetAsync(_componentHome, home);
             return Ok();
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpPut("Admin/Home")]
-        public async Task<ActionResult> PutAdminPageHome([FromBody] ConfigPageComponent home)
+        [HttpPut("Admin")]
+        public async Task<ActionResult> PutHomeAdmin([FromBody] ConfigPageComponent home)
         {
             await _mongoComponentStrategy.SetAsync(_componentHome, home);
             return Ok();
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpDelete("Admin/Home")]
-        public async Task<ActionResult> DeleteAdminPageHome()
+        [HttpDelete("Admin")]
+        public async Task<ActionResult> DeleteHomeAdmin()
         {
             await _mongoComponentStrategy.RemoveAsync(_componentHome);
             return Ok();
@@ -56,8 +56,8 @@ namespace V3WebApi.Controllers.Pages
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpPost("Admin/Home/Apply")]
-        public async Task<ActionResult> PostAdminPageHomeApply()
+        [HttpPost("Admin/Apply")]
+        public async Task<ActionResult> PostHomeAdminApply()
         {
             var currentHome = await _redisComponentStrategy.GetAsync(_cacheHome);
             var currentHistory = new ComponentHistory
@@ -74,8 +74,8 @@ namespace V3WebApi.Controllers.Pages
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpPost("Admin/Home/Undo")]
-        public async Task<ActionResult> PostAdminPageHomeUndo()
+        [HttpPost("Admin/Undo")]
+        public async Task<ActionResult> PostHomeAdminUndo()
         {
             var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
             var componentHistory = new ComponentHistory
@@ -92,8 +92,8 @@ namespace V3WebApi.Controllers.Pages
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpPost("Admin/Home/Redo")]
-        public async Task<ActionResult> PostAdminPageHomeRedo()
+        [HttpPost("Admin/Redo")]
+        public async Task<ActionResult> PostHomeAdminRedo()
         {
             var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
             var componentHistory = new ComponentHistory

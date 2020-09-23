@@ -9,11 +9,11 @@ using V3Lib.Visitors;
 
 namespace V3WebApi.Controllers.Pages
 {
-    public partial class PageController : ControllerBase
+    public partial class HomeController : ControllerBase
     {
         [MapToApiVersion("3.0-patch0")]
-        [HttpGet("User/Home")]
-        public async Task<ActionResult<UserPageComponent>> GetUserPageHome()
+        [HttpGet("User")]
+        public async Task<ActionResult<UserPageComponent>> GetHomeUser()
         {
             var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
 

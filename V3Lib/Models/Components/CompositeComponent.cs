@@ -14,7 +14,7 @@ namespace V3Lib.Models.Components
         public override void Accept(IVisitor visitor)
         {
             visitor.Visit(this);
-            SubComponents.ToList().ForEach(component => visitor.Visit(component));
+            SubComponents.ToList().ForEach(component => component.Accept(visitor));
         }
 
         public override void Isolate()

@@ -12,13 +12,13 @@ namespace V3WebApi.Controllers.Pages
     [ApiVersion("3.0-patch0")]
     [Produces("application/json", "application/x-msgpack")]
     [Route("api/[controller]/v{version:apiVersion}")]
-    public partial class PageController : ControllerBase
+    public partial class HomeController : ControllerBase
     {
         protected VisitorFactory _visitorFactory;
         protected IMapper _mapper;
         protected MongoComponentStrategy _mongoComponentStrategy;
         protected RedisComponentStrategy _redisComponentStrategy;
-        protected MongoConfigConditsStrategy _configConditsStrategy;
+        protected MongoConfigConditStrategy _configConditsStrategy;
         protected MongoComponentHistoryStrategy _historyStrategy;
         protected MongoStrategyParams _componentHome;
         protected MongoStrategyParams _conditionDefined;
@@ -26,7 +26,7 @@ namespace V3WebApi.Controllers.Pages
         protected MongoStrategyParams _componentHistoryHomeRedo;
         protected RedisStrategyParams _cacheHome;
 
-        public PageController(VisitorFactory visitorBuilderFactory, IMapper mapper, MongoComponentStrategy mongoComponentStrategy, RedisComponentStrategy redisComponentStrategy, MongoConfigConditsStrategy configConditsStrategy, MongoComponentHistoryStrategy historyStrategy)
+        public HomeController(VisitorFactory visitorBuilderFactory, IMapper mapper, MongoComponentStrategy mongoComponentStrategy, RedisComponentStrategy redisComponentStrategy, MongoConfigConditStrategy configConditsStrategy, MongoComponentHistoryStrategy historyStrategy)
         {
             _visitorFactory = visitorBuilderFactory;
             _mapper = mapper;

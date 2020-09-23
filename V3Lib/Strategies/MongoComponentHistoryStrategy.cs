@@ -17,7 +17,6 @@ namespace V3Lib.Strategies
 
         public IMongoClient MongoClient { get; }
 
-        // TODO: 套用 Discharge 至 Push
         public async Task DischargeAsync(MongoStrategyParams strategyParams)
         {
             var database = strategyParams.Database;

@@ -17,11 +17,11 @@ namespace V3WebApi.Controllers.Conditions
     public partial class ConditionController : ControllerBase
     {
         protected IMongoClient _mongoClient;
-        protected MongoConfigConditStrategy _configConditStrategy;
-        protected MongoConfigConditsStrategy _configConditsStrategy;
+        protected MongoTargetConfigConditStrategy _configConditStrategy;
+        protected MongoConfigConditStrategy _configConditsStrategy;
         protected MongoStrategyParams _conditionDefined;
 
-        public ConditionController(IMongoClient mongoClient, MongoConfigConditStrategy configConditStrategy, MongoConfigConditsStrategy configConditsStrategy)
+        public ConditionController(IMongoClient mongoClient, MongoTargetConfigConditStrategy configConditStrategy, MongoConfigConditStrategy configConditsStrategy)
         {
             _mongoClient = mongoClient;
             _configConditStrategy = configConditStrategy;

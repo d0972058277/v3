@@ -110,6 +110,7 @@ namespace V3Lib.Models
         public static MemberComponent Fake(this MemberComponent component, Dictionary<string, DefinedCondition> conditions)
         {
             var fake = component.Clone();
+            fake.ComponentId = Guid.NewGuid();
 
             if (RandomBoolean)
             {
@@ -159,10 +160,10 @@ namespace V3Lib.Models
                 fake.Medias.Add(instance);
             }
 
-            // if (RandomBoolean)
-            // {
-            //     fake.Operations.Add(new MoreOperation());
-            // }
+            if (RandomBoolean)
+            {
+                fake.Operations.Add(new MoreOperation());
+            }
 
             return fake;
         }
@@ -170,6 +171,7 @@ namespace V3Lib.Models
         public static LazyComponent Fake(this LazyComponent component, Dictionary<string, DefinedCondition> conditions)
         {
             var fake = component.Clone();
+            fake.ComponentId = Guid.NewGuid();
 
             fake.Path = RandomName;
 
@@ -203,6 +205,7 @@ namespace V3Lib.Models
         {
             var fake = component.Clone();
 
+            fake.ComponentId = Guid.NewGuid();
             fake.Title = RandomName;
             fake.SubTitle = RandomName;
 
