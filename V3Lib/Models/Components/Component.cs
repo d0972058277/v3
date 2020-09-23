@@ -1,4 +1,5 @@
 using System;
+using KnstArchitecture.SequentialGuid;
 using MessagePack;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -34,7 +35,7 @@ namespace V3Lib.Models.Components
 
         public Guid? UpperLayerComponentId { get; set; } = null;
 
-        public Guid ComponentId { get; set; } = Guid.NewGuid();
+        public Guid ComponentId { get; set; } = SequentialGuid.NewGuid();
 
         public Condition Condition { get; set; }
 

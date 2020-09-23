@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KnstArchitecture.SequentialGuid;
 using V3Lib.Models.Additionals;
 using V3Lib.Models.Components;
 using V3Lib.Models.Conditions;
@@ -13,13 +14,13 @@ namespace V3Lib.Models
 {
     public static class FakeExtensions
     {
-        public static string RandomName => Guid.NewGuid().ToString();
+        public static string RandomName => SequentialGuid.NewGuid().ToString();
 
         public static bool RandomBoolean
         {
             get
             {
-                Random random = new Random(Guid.NewGuid().GetHashCode());
+                Random random = new Random(SequentialGuid.NewGuid().GetHashCode());
                 return random.Next(100) <= 50;
             }
         }
@@ -28,14 +29,14 @@ namespace V3Lib.Models
         {
             get
             {
-                Random random = new Random(Guid.NewGuid().GetHashCode());
+                Random random = new Random(SequentialGuid.NewGuid().GetHashCode());
                 return random.Next(-10, 10);
             }
         }
 
         public static T RandomPeek<T>(this IEnumerable<T> enumable)
         {
-            return enumable.OrderBy(arg => Guid.NewGuid()).Take(1).Single();
+            return enumable.OrderBy(arg => SequentialGuid.NewGuid()).Take(1).Single();
         }
 
         public static MemberAdditional Fake(this MemberAdditional extension)
@@ -110,7 +111,7 @@ namespace V3Lib.Models
         public static MemberComponent Fake(this MemberComponent component, Dictionary<string, DefinedCondition> conditions)
         {
             var fake = component.Clone();
-            fake.ComponentId = Guid.NewGuid();
+            fake.ComponentId = SequentialGuid.NewGuid();
 
             if (RandomBoolean)
             {
@@ -171,7 +172,7 @@ namespace V3Lib.Models
         public static LazyComponent Fake(this LazyComponent component, Dictionary<string, DefinedCondition> conditions)
         {
             var fake = component.Clone();
-            fake.ComponentId = Guid.NewGuid();
+            fake.ComponentId = SequentialGuid.NewGuid();
 
             fake.Path = RandomName;
 
@@ -205,7 +206,7 @@ namespace V3Lib.Models
         {
             var fake = component.Clone();
 
-            fake.ComponentId = Guid.NewGuid();
+            fake.ComponentId = SequentialGuid.NewGuid();
             fake.Title = RandomName;
             fake.SubTitle = RandomName;
 
