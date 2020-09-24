@@ -10,12 +10,12 @@ namespace V3Lib.Strategies
 
     public class RedisConfigConditStrategy : IConfigConditsStrategy<RedisStrategyParams>, IRedisStrategy
     {
-        public RedisConfigConditStrategy(IDistributedCache cache)
+        public RedisConfigConditStrategy(IV3DistributedCache cache)
         {
             Cache = cache;
         }
 
-        public IDistributedCache Cache { get; }
+        public IV3DistributedCache Cache { get; }
 
         public Task<List<ConfigCondition>> GetAsync(RedisStrategyParams strategyParams)
         {

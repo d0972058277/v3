@@ -8,12 +8,12 @@ namespace V3Lib.Strategies
 {
     public class RedisComponentStrategy : IComponentStrategy<RedisStrategyParams>, IRedisStrategy
     {
-        public RedisComponentStrategy(IDistributedCache cache)
+        public RedisComponentStrategy(IV3DistributedCache cache)
         {
             Cache = cache;
         }
 
-        public IDistributedCache Cache { get; }
+        public IV3DistributedCache Cache { get; }
 
         public Task<Component> GetAsync(RedisStrategyParams strategyParams)
         {

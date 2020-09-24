@@ -56,13 +56,6 @@ namespace V3WebApi
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
-            // 分散式快取
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = Environment.GetEnvironmentVariable("RedisConnectionString");
-                options.InstanceName = "FeatureComponent";
-            });
-
             // MongoDb
             services.AddSingleton<IMongoClient>(sp =>
             {
@@ -85,7 +78,13 @@ namespace V3WebApi
                 return new MongoClient(clientSettings);
             });
 
+            // V3
             services.AddV3();
+            // V3 分散式快取
+            services.AddV3DistributedCache(options =>
+            {
+                options.Configuration = Environment.GetEnvironmentVariable("RedisConnectionString");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

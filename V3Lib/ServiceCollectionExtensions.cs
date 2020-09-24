@@ -26,6 +26,13 @@ namespace V3Lib
             return services;
         }
 
+        public static IServiceCollection AddV3DistributedCache(this IServiceCollection services, Action<V3DistributedCacheOptions> setupAction)
+        {
+            services.Configure<V3DistributedCacheOptions>(setupAction);
+            services.AddSingleton<IV3DistributedCache, V3DistributedCache>();
+            return services;
+        }
+
         private static void BsonRegister()
         {
             // 設定MongoDb的DateTime格式為Local

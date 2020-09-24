@@ -15,7 +15,7 @@ namespace V3Lib.Strategies.Abstractions
 
     public interface IRedisStrategy : IStrategy
     {
-        IDistributedCache Cache { get; }
+        IV3DistributedCache Cache { get; }
     }
 
     public interface IStrategy<T, E> : IStrategy where T : IStrategyParams

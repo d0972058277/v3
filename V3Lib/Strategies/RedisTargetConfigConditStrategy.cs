@@ -9,13 +9,13 @@ namespace V3Lib.Strategies
 {
     public class RedisTargetConfigConditStrategy : IConfigConditStrategy<RedisStrategyParams>, IRedisStrategy
     {
-        public RedisTargetConfigConditStrategy(IDistributedCache cache, RedisConfigConditStrategy configConditsStrategy)
+        public RedisTargetConfigConditStrategy(IV3DistributedCache cache, RedisConfigConditStrategy configConditsStrategy)
         {
             Cache = cache;
             _configConditsStrategy = configConditsStrategy;
         }
 
-        public IDistributedCache Cache { get; }
+        public IV3DistributedCache Cache { get; }
 
         protected RedisConfigConditStrategy _configConditsStrategy;
 
