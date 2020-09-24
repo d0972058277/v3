@@ -17,6 +17,19 @@ namespace V3Lib.Models.Components
             SubComponents.ToList().ForEach(component => component.Accept(visitor));
         }
 
+        public override bool ContainComponent(Component component)
+        {
+            return SubComponents.Contains(component);
+        }
+
+        public override void ExchangeComponent(Component targetComponent, Component exchangeComponent)
+        {
+            var index = SubComponents.IndexOf(targetComponent);
+            SubComponents[index] = exchangeComponent;
+            targetComponent.SetUpperLayerComponent(null);
+            exchangeComponent.SetUpperLayerComponent(this);
+        }
+
         public override void Isolate()
         {
             base.Isolate();

@@ -39,6 +39,13 @@ namespace V3Lib.Models.Components
 
         public Condition Condition { get; set; }
 
+        public virtual bool ContainComponent(Component component) => false;
+
+        public virtual void ExchangeComponent(Component targetComponent, Component exchangeComponent)
+        {
+            throw new InvalidOperationException("只有 Composite 支援 Component 交換。");
+        }
+
         public Component GetRoot()
         {
             if (IsRoot()) return this;

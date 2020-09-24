@@ -8,9 +8,9 @@ using V3Lib.Visitors.Abstractions;
 
 namespace V3Lib.Visitors
 {
-    public class LinkRelationVisitor : VisitorBase<Component>
+    public class LinkComponentRelationVisitor : VisitorBase<Component>
     {
-        public LinkRelationVisitor(IParams @params) : base(@params) { }
+        public LinkComponentRelationVisitor(IParams @params) : base(@params) { }
 
         public Dictionary<Guid, Component> FlatElements { get; } = new Dictionary<Guid, Component>();
 
@@ -23,9 +23,8 @@ namespace V3Lib.Visitors
                 var upperLayerComponent = FlatElements[element.UpperLayerComponentId.Value];
                 element.SetUpperLayerComponent(upperLayerComponent);
             }
-
         }
     }
 
-    public class LinkRelationVisitorBuilder : VisitorBuilder<LinkRelationVisitor, NullParams> { }
+    public class LinkComponentRelationVisitorBuilder : VisitorBuilder<LinkComponentRelationVisitor, NullParams> { }
 }

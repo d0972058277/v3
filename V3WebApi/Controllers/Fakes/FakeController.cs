@@ -41,8 +41,8 @@ namespace V3WebApi.Controllers.Fakes
         }
 
         [MapToApiVersion("3.0-patch0")]
-        [HttpGet("Component")]
-        public async Task<ActionResult<ConfigPageComponent>> FakeComponent([FromQuery] int number, [FromQuery] int subNumber)
+        [HttpGet("ConfigComponent")]
+        public async Task<ActionResult<ConfigPageComponent>> FakeConfigComponent([FromQuery] int number, [FromQuery] int subNumber)
         {
             var builder = Builders<ConfigCondition>.Filter;
             var filter = builder.Empty;
@@ -55,6 +55,34 @@ namespace V3WebApi.Controllers.Fakes
             {
                 page.AddLowerLayer(default(Component).Fake(conditions, subNumber));
             }
+
+            return Ok(page);
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet("MemberComponent")]
+        public async Task<ActionResult<ConfigPageComponent>> FakeMemberComponent()
+        {
+            var builder = Builders<ConfigCondition>.Filter;
+            var filter = builder.Empty;
+            var defineds = await _configConditsStrategy.GetAsync(_conditionDefined);
+            var conditions = defineds.ToDictionary(d => d.Key, d => d.Defined);
+
+            var page = new MemberComponent().Fake(conditions);
+
+            return Ok(page);
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet("LazyComponent")]
+        public async Task<ActionResult<ConfigPageComponent>> FakeLazyComponent()
+        {
+            var builder = Builders<ConfigCondition>.Filter;
+            var filter = builder.Empty;
+            var defineds = await _configConditsStrategy.GetAsync(_conditionDefined);
+            var conditions = defineds.ToDictionary(d => d.Key, d => d.Defined);
+
+            var page = new LazyComponent().Fake(conditions);
 
             return Ok(page);
         }

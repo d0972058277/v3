@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,7 @@ namespace V3WebApi.Controllers.Pages
         public async Task<ActionResult<Component>> GetHomeAdmin()
         {
             var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
-            var conditions = await _configConditsStrategy.GetAsync(_conditionDefined);
-
             var adminComponent = _mapper.Map<AdminPageComponent>(configComponent);
-
-            adminComponent.Conditions = conditions.ToDictionary(c => c.Key, c => c.Defined);
-
             return Ok(adminComponent);
         }
 
@@ -53,6 +49,146 @@ namespace V3WebApi.Controllers.Pages
             await _mongoComponentStrategy.RemoveAsync(_componentHome);
             return Ok();
 
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet("Admin/{componentId}")]
+        public async Task<ActionResult<Component>> GetHomeAdmin(Guid componentId)
+        {
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var flatVisitor = _visitorFactory.GetBuilder<FlatComponentVisitorBuilder>().Build();
+            configComponent.Accept(flatVisitor);
+            var targetComponent = flatVisitor.FlatElements[componentId];
+
+            return Ok(targetComponent);
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpPut("Admin/{componentId}/Lazy")]
+        public async Task<ActionResult> PutHomeAdminLazy(Guid componentId, [FromBody] LazyComponent exchangeComponent)
+        {
+            if (componentId != exchangeComponent.ComponentId)
+                throw new ArgumentException($"componentId != component.Id");
+
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
+            exchangeComponent.Accept(linkVisitor);
+
+            var flatVisitor = _visitorFactory.GetBuilder<FlatComponentVisitorBuilder>().Build();
+            configComponent.Accept(flatVisitor);
+            var targetComponent = flatVisitor.FlatElements[componentId];
+
+            var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeComponentVisitorBuilder>().SetExchangeComponent(targetComponent, exchangeComponent).Build();
+            configComponent.Accept(exchangeVisitor);
+
+            await _mongoComponentStrategy.SetAsync(_componentHome, configComponent);
+
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpPut("Admin/{componentId}/Member")]
+        public async Task<ActionResult> PutHomeAdminMember(Guid componentId, [FromBody] MemberComponent exchangeComponent)
+        {
+            if (componentId != exchangeComponent.ComponentId)
+                throw new ArgumentException($"componentId != component.Id");
+
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
+            exchangeComponent.Accept(linkVisitor);
+
+            var flatVisitor = _visitorFactory.GetBuilder<FlatComponentVisitorBuilder>().Build();
+            configComponent.Accept(flatVisitor);
+            var targetComponent = flatVisitor.FlatElements[componentId];
+
+            var exchangeVisitor = _visitorFactory.GetBuilder<ExchangeComponentVisitorBuilder>().SetExchangeComponent(targetComponent, exchangeComponent).Build();
+            configComponent.Accept(exchangeVisitor);
+
+            await _mongoComponentStrategy.SetAsync(_componentHome, configComponent);
+
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpDelete("Admin/{componentId}")]
+        public async Task<ActionResult> DeleteHomeAdmin(Guid componentId)
+        {
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
+            configComponent.Accept(linkVisitor);
+
+            var removeVisitor = _visitorFactory.GetBuilder<RemoveComponentVisitorBuilder>().SetComponentId(componentId).Build();
+            configComponent.Accept(removeVisitor);
+
+            await _mongoComponentStrategy.SetAsync(_componentHome, configComponent);
+
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpPost("Admin/{componentId}/SubComponents/Lazy")]
+        public async Task<ActionResult> PutHomeAdminSubComponentsLazy(Guid componentId, [FromBody] LazyComponent component)
+        {
+            if (componentId == component.ComponentId)
+                throw new ArgumentException($"componentId == component.Id");
+
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var flatVisitor = _visitorFactory.GetBuilder<FlatComponentVisitorBuilder>().Build();
+            configComponent.Accept(flatVisitor);
+            var targetComponent = flatVisitor.FlatElements[componentId];
+            if (!(targetComponent is CompositeComponent))
+            {
+                throw new InvalidOperationException("只有 Composite 支援增加 SubComponent。");
+            }
+            if (flatVisitor.FlatElements.ContainsKey(component.ComponentId))
+            {
+                throw new InvalidOperationException("ConfigComponent 已具備 component.ComponentId 請使用新的 component.ComponentId。");
+            }
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
+            component.Accept(linkVisitor);
+
+            (targetComponent as CompositeComponent).AddLowerLayer(component);
+
+            await _mongoComponentStrategy.SetAsync(_componentHome, configComponent);
+
+            return Ok();
+        }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpPost("Admin/{componentId}/SubComponents/Member")]
+        public async Task<ActionResult> PutHomeAdminSubComponentsMember(Guid componentId, [FromBody] MemberComponent component)
+        {
+            if (componentId == component.ComponentId)
+                throw new ArgumentException($"componentId == component.Id");
+
+            var configComponent = await _mongoComponentStrategy.GetAsync(_componentHome);
+
+            var flatVisitor = _visitorFactory.GetBuilder<FlatComponentVisitorBuilder>().Build();
+            configComponent.Accept(flatVisitor);
+            var targetComponent = flatVisitor.FlatElements[componentId];
+            if (!(targetComponent is CompositeComponent))
+            {
+                throw new InvalidOperationException("只有 Composite 支援增加 SubComponent。");
+            }
+            if (flatVisitor.FlatElements.ContainsKey(component.ComponentId))
+            {
+                throw new InvalidOperationException("ConfigComponent 已具備 component.ComponentId 請使用新的 component.ComponentId。");
+            }
+
+            var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
+            component.Accept(linkVisitor);
+
+            (targetComponent as CompositeComponent).AddLowerLayer(component);
+
+            await _mongoComponentStrategy.SetAsync(_componentHome, configComponent);
+
+            return Ok();
         }
 
         [MapToApiVersion("3.0-patch0")]
