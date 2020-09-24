@@ -79,11 +79,18 @@ namespace V3Lib.Strategies.Abstractions
                 );
         }
 
-        public Task PushAsync(MongoStrategyParams strategyParams, Entity history)
+        public async Task PushAsync(MongoStrategyParams strategyParams, Entity history)
         {
             var database = strategyParams.Database;
             var collection = strategyParams.Collection;
-            return MongoClient.GetDatabase(database).GetCollection<Entity>(collection).InsertOneAsync(history);
+            var filter = Builders<Entity>.Filter.Empty;
+
+            while ((await MongoClient.GetDatabase(database).GetCollection<Entity>(collection).CountDocumentsAsync(filter)) >= strategyParams.StackSize)
+            {
+                await DischargeAsync(strategyParams);
+            }
+
+            await MongoClient.GetDatabase(database).GetCollection<Entity>(collection).InsertOneAsync(history);
         }
 
         public Task RemoveAsync(MongoStrategyParams strategyParams)
