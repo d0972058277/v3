@@ -29,7 +29,7 @@ namespace V3WebApi.Controllers.Pages
 
             if (configComponent is null) return Ok(null);
 
-            var conditions = await _configConditsStrategy.GetAsync(_conditionDefined);
+            var conditions = await _mongoConfigConditsStrategy.GetAsync(_conditionDefined);
 
             var linkVisitor = _visitorFactory.GetBuilder<LinkComponentRelationVisitorBuilder>().Build();
             configComponent.Accept(linkVisitor);

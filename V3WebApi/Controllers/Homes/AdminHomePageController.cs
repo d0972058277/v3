@@ -195,14 +195,28 @@ namespace V3WebApi.Controllers.Pages
         [HttpPost("Admin/Apply")]
         public async Task<ActionResult> PostHomeAdminApply()
         {
+            // Condition
+            var currentDefinedCondition = await _redisConfigConditsStrategy.GetAsync(_cacheCondit);
+            var currentConditionHistory = new ConditionHistory
+            {
+                Editor = new History.HistoryEditor { Name = "Test" },
+                Conditions = currentDefinedCondition
+            };
+            await _conditionHistoryStrategy.PushAsync(_conditionHistoryHomeUndo, currentConditionHistory);
+            await _conditionHistoryStrategy.RemoveAsync(_conditionHistoryHomeRedo);
+
+            var condit = await _mongoConfigConditsStrategy.GetAsync(_conditionDefined);
+            await _redisConfigConditsStrategy.SetAsync(_cacheCondit, condit);
+
+            // Component
             var currentHome = await _redisComponentStrategy.GetAsync(_cacheHome);
-            var currentHistory = new ComponentHistory
+            var currentComponentHistory = new ComponentHistory
             {
                 Editor = new History.HistoryEditor { Name = "Test" },
                 Component = currentHome
             };
-            await _historyStrategy.PushAsync(_componentHistoryHomeUndo, currentHistory);
-            await _historyStrategy.RemoveAsync(_componentHistoryHomeRedo);
+            await _componentHistoryStrategy.PushAsync(_componentHistoryHomeUndo, currentComponentHistory);
+            await _componentHistoryStrategy.RemoveAsync(_componentHistoryHomeRedo);
 
             var home = await _mongoComponentStrategy.GetAsync(_componentHome);
             await _redisComponentStrategy.SetAsync(_cacheHome, home);
@@ -213,15 +227,29 @@ namespace V3WebApi.Controllers.Pages
         [HttpPost("Admin/Undo")]
         public async Task<ActionResult> PostHomeAdminUndo()
         {
+            // Condition
+            var currentDefinedCondition = await _redisConfigConditsStrategy.GetAsync(_cacheCondit);
+            var currentConditionHistory = new ConditionHistory
+            {
+                Editor = new History.HistoryEditor { Name = "Test" },
+                Conditions = currentDefinedCondition
+            };
+            await _conditionHistoryStrategy.PushAsync(_conditionHistoryHomeRedo, currentConditionHistory);
+
+            var condit = await _conditionHistoryStrategy.PopAsync(_conditionHistoryHomeUndo);
+
+            await _redisConfigConditsStrategy.SetAsync(_cacheCondit, condit.Conditions);
+
+            // Component
             var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
             var componentHistory = new ComponentHistory
             {
                 Editor = new History.HistoryEditor { Name = "Test" },
                 Component = configComponent
             };
-            await _historyStrategy.PushAsync(_componentHistoryHomeRedo, componentHistory);
+            await _componentHistoryStrategy.PushAsync(_componentHistoryHomeRedo, componentHistory);
 
-            var home = await _historyStrategy.PopAsync(_componentHistoryHomeUndo);
+            var home = await _componentHistoryStrategy.PopAsync(_componentHistoryHomeUndo);
 
             await _redisComponentStrategy.SetAsync(_cacheHome, home.Component);
             return Ok();
@@ -231,15 +259,29 @@ namespace V3WebApi.Controllers.Pages
         [HttpPost("Admin/Redo")]
         public async Task<ActionResult> PostHomeAdminRedo()
         {
+            // Condition
+            var currentDefinedCondition = await _redisConfigConditsStrategy.GetAsync(_cacheCondit);
+            var currentConditionHistory = new ConditionHistory
+            {
+                Editor = new History.HistoryEditor { Name = "Test" },
+                Conditions = currentDefinedCondition
+            };
+            await _conditionHistoryStrategy.PushAsync(_conditionHistoryHomeUndo, currentConditionHistory);
+
+            var condit = await _conditionHistoryStrategy.PopAsync(_conditionHistoryHomeRedo);
+
+            await _redisConfigConditsStrategy.SetAsync(_cacheCondit, condit.Conditions);
+
+            // Component
             var configComponent = await _redisComponentStrategy.GetAsync(_cacheHome);
             var componentHistory = new ComponentHistory
             {
                 Editor = new History.HistoryEditor { Name = "Test" },
                 Component = configComponent
             };
-            await _historyStrategy.PushAsync(_componentHistoryHomeUndo, componentHistory);
+            await _componentHistoryStrategy.PushAsync(_componentHistoryHomeUndo, componentHistory);
 
-            var home = await _historyStrategy.PopAsync(_componentHistoryHomeRedo);
+            var home = await _componentHistoryStrategy.PopAsync(_componentHistoryHomeRedo);
 
             await _redisComponentStrategy.SetAsync(_cacheHome, home.Component);
             return Ok();

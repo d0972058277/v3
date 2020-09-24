@@ -4,11 +4,11 @@ using V3Lib.Models.Params;
 
 namespace V3Lib.Strategies.Abstractions
 {
-    public interface IHistoryStrategy<T, R> : IStrategy<T, List<R>> where T : IStrategyParams
+    public interface IHistoryStrategy<T, Entity> : IStrategy<T, List<Entity>> where T : IStrategyParams
     {
-        Task<R> PeekAsync(T strategyParams);
-        Task<R> PopAsync(T strategyParams);
-        Task PushAsync(T strategyParams, R history);
+        Task<Entity> PeekAsync(T strategyParams);
+        Task<Entity> PopAsync(T strategyParams);
+        Task PushAsync(T strategyParams, Entity history);
         Task DischargeAsync(T strategyParams);
     }
 }
