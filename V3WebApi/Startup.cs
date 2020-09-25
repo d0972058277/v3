@@ -1,4 +1,6 @@
 using System;
+using CorrelationId;
+using CorrelationId.DependencyInjection;
 using MessagePack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using Serilog;
 using V3Lib;
 using V3Lib.NewtonsoftJsonExtensions;
 using V3WebApi.SwashbuckleExtensions;
@@ -85,12 +88,20 @@ namespace V3WebApi
             {
                 options.Configuration = Environment.GetEnvironmentVariable("RedisConnectionString");
             });
+
+            services.AddHttpClient();
+            services.AddDefaultCorrelationId();
+            services.AddCorrelationIdHeaderPropagation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSerilogRequestLogging();
+
             app.UseExceptionHandler("/Error");
+
+            app.UseCorrelationId();
 
             app.UseRouting();
 
