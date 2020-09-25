@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace V3WebApi.Controllers.Fakes
 
             _conditionDefined = new MongoStrategyParams { Database = "Condition", Collection = "Defined" };
         }
+
+        [MapToApiVersion("3.0-patch0")]
+        [HttpGet("Exception")]
+        public void GetException() =>
+            throw new Exception("Test Exception.");
 
         [MapToApiVersion("3.0-patch0")]
         [HttpGet("Condition")]

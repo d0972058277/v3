@@ -9,8 +9,7 @@ namespace V3Lib
     {
         public V3DistributedCacheOptions() : base()
         {
-            string environmentName = string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")) ?
-                throw new ArgumentNullException("ASPNETCORE_ENVIRONMENT") : Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string environmentName = string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")) ? throw new ArgumentNullException("ASPNETCORE_ENVIRONMENT") : Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             base.InstanceName = $"V3.{environmentName}.";
         }
 

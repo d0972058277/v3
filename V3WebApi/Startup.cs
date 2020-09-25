@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using V3Lib;
@@ -49,6 +48,7 @@ namespace V3WebApi
                 c.SupportApiVersion();
 
                 c.SwaggerDoc("v3.0-patch0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Components", Version = "v3.0-patch0" });
+                c.SwaggerDoc("v3.0-patch1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Components", Version = "v3.0-patch1" });
 
                 c.OperationFilter<RemoveVersionParameterFilter>();
                 c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
@@ -90,10 +90,7 @@ namespace V3WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseExceptionHandler("/Error");
 
             app.UseRouting();
 
@@ -111,6 +108,7 @@ namespace V3WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v3.0-patch0/swagger.json", "V3 Docs");
+                c.SwaggerEndpoint("/swagger/v3.0-patch1/swagger.json", "V3 Docs");
                 c.RoutePrefix = string.Empty;
             });
         }
