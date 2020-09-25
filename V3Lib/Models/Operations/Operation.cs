@@ -12,5 +12,8 @@ namespace V3Lib.Models.Operations
     [Union(0, typeof(MoreOperation))]
     // Json
     [AddJsonTypeName]
-    public abstract class Operation { }
+    public abstract class Operation
+    {
+        public string Title { get; set; }
+    }
 }
