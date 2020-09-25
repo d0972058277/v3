@@ -1,6 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>3.0.0.0</PackageVersion>
+    <Authors>PorriDG3</Authors>
+    <Owners>PorriDG3</Owners>
+    <Title>V3Lib</Title>
+    <Description>V3Lib</Description>
+    <Copyright>PorriDG3</Copyright>
+    <Summary>V3Lib</Summary>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.1.165" />
