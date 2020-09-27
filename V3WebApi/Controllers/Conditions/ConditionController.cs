@@ -13,7 +13,7 @@ namespace V3WebApi.Controllers.Conditions
 {
     [ApiVersion("3.0-patch0")]
     [Produces("application/json", "application/x-msgpack")]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public partial class ConditionController : ControllerBase
     {
         protected IMongoClient _mongoClient;

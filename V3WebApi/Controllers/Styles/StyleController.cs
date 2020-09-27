@@ -8,7 +8,7 @@ namespace V3WebApi.Controllers.Styles
 {
     [ApiVersion("3.0-patch0")]
     [Produces("application/json", "application/x-msgpack")]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class StyleController : ControllerBase
     {
         [MapToApiVersion("3.0-patch0")]

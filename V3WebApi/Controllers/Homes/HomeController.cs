@@ -11,7 +11,7 @@ namespace V3WebApi.Controllers.Pages
 {
     [ApiVersion("3.0-patch0")]
     [Produces("application/json", "application/x-msgpack")]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public partial class HomeController : ControllerBase
     {
         protected VisitorFactory _visitorFactory;
